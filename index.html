@@ -105,7 +105,7 @@
       <a href="#locales" class="btn btn-ghost">Ver nuestros 2 locales</a>
     </div>
     <ul class="trust">
-      <li><b>4,2★</b><span>+2.100 opiniones en Google</span></li>
+      <li><b>4,2★</b><span>+2.300 opiniones en Google</span></li>
       <li><b>+300</b><span>platos y tragos en carta</span></li>
       <li><b>+20</b><span>años de historia</span></li>
     </ul>
@@ -227,23 +227,38 @@
 </section>
 
 <!-- RESEÑAS -->
-<section class="sec reviews">
+<section class="sec reviews" id="opiniones">
   <div class="sec-head row">
     <div>
-      <p class="kicker">Lo que dicen de nosotros</p>
+      <p class="kicker">Opiniones en Google</p>
       <h2>Lo que dicen <em>nuestros clientes</em></h2>
     </div>
-    <div class="rev-nav">
+    <div class="rev-nav" id="revNav" hidden>
       <button class="circle-btn" id="revPrev" aria-label="Reseña anterior"><svg viewBox="0 0 24 24"><path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       <button class="circle-btn" id="revNext" aria-label="Reseña siguiente"><svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
     </div>
   </div>
-  <div class="rev-track" id="revTrack" tabindex="0" aria-label="Reseñas de clientes"><!-- render JS --></div>
-  <div class="badges">
-    <div class="badge-pill"><b>4,2★ en Google</b><span>Más de 2.100 opiniones</span></div>
-    <div class="badge-pill"><b>Mejor Empanada de Iquique</b><span>Seremi de Agricultura Tarapacá</span></div>
-    <div class="badge-pill"><b>Desde 2005</b><span>En la Península de Cavancha</span></div>
+
+  <div class="gcard">
+    <div class="gscore">
+      <b id="gNota">4,2</b>
+      <div>
+        <div class="gstars" role="img" id="gStars" aria-label="4,2 de 5 estrellas"><span></span></div>
+        <p><span id="gTotal">+2.300</span> opiniones en Google</p>
+      </div>
+    </div>
+    <ul class="gfacts">
+      <li><b id="gCinco">+1.300</b><span>reseñas de 5 estrellas</span></li>
+      <li><b id="gPct">79%</b><span>nos califica con 4 o 5 estrellas</span></li>
+      <li><b>🏆</b><span>Mejor Empanada de Iquique · Seremi de Agricultura de Tarapacá</span></li>
+    </ul>
+    <div class="gactions">
+      <a class="btn btn-primary" id="gLeer" target="_blank" rel="noopener" href="https://maps.app.goo.gl/HCWu1sZ8AzGHnCcf6">Leer opiniones en Google</a>
+      <a class="btn btn-ghost" id="gEscribir" target="_blank" rel="noopener" href="https://maps.app.goo.gl/HCWu1sZ8AzGHnCcf6">Dejar mi opinión</a>
+    </div>
   </div>
+
+  <div class="rev-track" id="revTrack" tabindex="0" aria-label="Reseñas de clientes en Google" hidden><!-- render JS --></div>
 </section>
 
 <!-- INSTAGRAM -->

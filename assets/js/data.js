@@ -416,19 +416,19 @@ const MENU = [
 /* Sugerencias del carrito cuando no hay bebida */
 const SUGERENCIAS = ["b1", "b4", "b8"];
 
-/* Reseñas: txt = texto; titulo = título de la reseña en TripAdvisor */
-const RESENAS = [
-  { titulo: "Best Empanadas", autor: "Viajero", fuente: "TripAdvisor", url: "https://www.tripadvisor.com/ShowUserReviews-g297397-d2706046-r490748184-Dona_Filomena-Iquique_Tarapaca_Region.html" },
-  { txt: "Lejos el mejor de Iquique en mariscos y pescados. Las empanadas de ostión queso y jaiba queso son exquisitas.", autor: "Visitante verificado", fuente: "Foursquare" },
-  { titulo: "Excelente en horario de tomar once", autor: "Viajero", fuente: "TripAdvisor", url: "https://www.tripadvisor.com.ar/ShowUserReviews-g297397-d2706046-r450510865-Dona_Filomena-Iquique_Tarapaca_Region.html" },
-  { txt: "El mojito de maracuyá es el mejor que he tomado en Iquique, ¡por lejos! La empanada Tilama, mi favorita. 100% recomendable.", autor: "Cliente frecuente", fuente: "Foursquare" },
-  { titulo: "Excelente carta y servicio", autor: "Viajero", fuente: "TripAdvisor", url: "https://www.tripadvisor.es/ShowUserReviews-g297397-d2706046-r376383647-Dona_Filomena-Iquique_Tarapaca_Region.html" },
-  { txt: "Pizza Cavanchina exquisita, muy buen mango sour y jugo de guayaba. Ambiente acogedor.", autor: "Visitante verificado", fuente: "Foursquare" },
-  { titulo: "Empanada Tilama y jugos naturales", autor: "Viajero", fuente: "TripAdvisor", url: "https://www.tripadvisor.com/ShowUserReviews-g297397-d2706046-r149364995-Dona_Filomena-Iquique_Tarapaca_Region.html" },
-  { txt: "¡Espectacular! La atención, la calidad, el ambiente. Un buen recuerdo de nuestras vacaciones en familia.", autor: "Familia en vacaciones", fuente: "Foursquare" },
-  { titulo: "¡Muy buen restaurant!", autor: "Viajero", fuente: "TripAdvisor", url: "https://www.tripadvisor.com.pe/ShowUserReviews-g297397-d2706046-r250636450-Dona_Filomena-Iquique_Tarapaca_Region.html" },
-  { txt: "Empanaditas de queso ostión, queso jaiba y queso pulpo realmente ricas y a buen precio. ¡Genial para el que le gusta la buena mesa!", autor: "Amante de los mariscos", fuente: "Foursquare" }
-];
+/* Opiniones en Google (local Península).
+   Actualiza estos números cuando cambien en tu ficha de Google. */
+const GOOGLE = {
+  nota: 4.2,
+  total: 2354,
+  cincoEstrellas: 1307,
+  cuatroEstrellas: 542,
+  placeId: "ChIJM-gN6PQTUpER0H4YFbjtBeo"
+};
+
+/* Reseñas destacadas de Google. Copia aquí las que quieras mostrar:
+   { txt: "Texto de la reseña", autor: "Nombre A.", estrellas: 5 } */
+const RESENAS = [];
 
 /* Publicaciones de Instagram (imagen + enlace).
    Para enlazar un post específico, reemplaza url por el link del post. */

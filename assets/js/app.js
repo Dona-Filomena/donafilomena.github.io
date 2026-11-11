@@ -223,11 +223,23 @@
 
   /* ---------- reseñas / instagram / ubicación ---------- */
   function renderReviews() {
+    const miles = n => (Math.floor(n / 100) * 100).toLocaleString("es-CL");
+    const g = GOOGLE, nota = g.nota.toFixed(1).replace(".", ",");
+    $("#gNota").textContent = nota;
+    $("#gStars").setAttribute("aria-label", `${nota} de 5 estrellas`);
+    $("#gStars span").style.width = (g.nota / 5 * 100) + "%";
+    $("#gTotal").textContent = "+" + miles(g.total);
+    $("#gCinco").textContent = "+" + miles(g.cincoEstrellas);
+    $("#gPct").textContent = Math.round((g.cincoEstrellas + g.cuatroEstrellas) / g.total * 100) + "%";
+    $("#gLeer").href = "https://search.google.com/local/reviews?placeid=" + g.placeId;
+    $("#gEscribir").href = "https://search.google.com/local/writereview?placeid=" + g.placeId;
+
+    $("#revTrack").hidden = $("#revNav").hidden = !RESENAS.length;
     $("#revTrack").innerHTML = RESENAS.map(r => `
-      <article class="rev ${r.titulo && !r.txt ? "rev-t" : ""}">
-        ${r.titulo ? `<h3 class="rev-title">“${esc(r.titulo)}”</h3>` : ""}
-        ${r.txt ? `<p>${esc(r.txt)}</p>` : ""}
-        <footer><b>${esc(r.autor)}</b><span>Reseña en ${esc(r.fuente)}</span>${r.url ? `<a href="${r.url}" target="_blank" rel="noopener">Leer reseña →</a>` : ""}</footer>
+      <article class="rev">
+        <div class="stars" aria-label="${r.estrellas || 5} estrellas">${"★".repeat(r.estrellas || 5)}</div>
+        <p>${esc(r.txt)}</p>
+        <footer><b>${esc(r.autor)}</b><span>Opinión en Google</span></footer>
       </article>`).join("");
   }
   function renderIG() {
@@ -493,7 +505,7 @@
   // aparición al hacer scroll
   if ("IntersectionObserver" in window && !reduceMotion) {
     const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { rootMargin: "0px 0px -8% 0px" });
-    $$(".sec-head, .loc, .compare, .dulce-card, .exp-card, .rev-track, .ig-head, .ig-grid, .ubic-grid").forEach(el => { el.classList.add("rv"); io.observe(el); });
+    $$(".sec-head, .loc, .compare, .dulce-card, .exp-card, .gcard, .ig-head, .ig-grid, .ubic-grid").forEach(el => { el.classList.add("rv"); io.observe(el); });
   }
 
   /* ---------- inicio ---------- */
