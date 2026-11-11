@@ -40,7 +40,7 @@ const LOCALES = {
     horarioTexto: [["Dom – Jue", "12:00 – 00:00"], ["Vie – Sáb", "12:00 – 01:00"]],
     entrega: ["delivery", "retiro"],
     notaDelivery: "Delivery GRATIS dentro de Península",
-    destacados: ["Terraza con música en vivo", "Zona infantil", "Bar y Happy Hour", "Menú del día Lun–Jue", "Delivery gratis en Península"]
+    destacados: ["Terraza con música en vivo", "Zona infantil (ticket $3.000)", "Bar y Happy Hour", "Menú del día Lun–Jue", "Delivery gratis en Península"]
   },
   zofri: {
     id: "zofri",
