@@ -10,7 +10,6 @@
   const ITEM = Object.fromEntries(MENU.map(i => [i.id, i]));
   const CAT = Object.fromEntries(CATEGORIAS.map(c => [c.id, c]));
   const DIAS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
-  const BEBIDAS = new Set(["jugos", "tragos", "cervezas", "jarras"]);
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   const fmt = n => "$" + Number(n).toLocaleString("es-CL");
@@ -32,7 +31,7 @@
     cart: Object.fromEntries(Object.entries(store.get("df-cart", {})).filter(([id, q]) => ITEM[id] && q > 0)),
     modo: null,
     q: "",
-    cat: CATEGORIAS[0].id
+    cat: "fritas"
   };
 
   /* ---------- hora de Chile ---------- */
@@ -96,8 +95,8 @@
   const refreshControls = id => $$(`[data-ctl="${id}"]`).forEach(el => { el.innerHTML = control(id); });
 
   const priceHTML = it => it.precio == null ? `<span class="price q">Consultar</span>` : `<span class="price">${fmt(it.precio)}</span>`;
-  const tagsHTML = it => (it.tags || []).filter(t => t !== "hh" || it.cat === "tragos").map(t => {
-    const lbl = { popular: "Popular", premiada: "Premiada", economica: "Económica", nuevo: "Nuevo", hh: "Happy Hour" }[t] || t;
+  const tagsHTML = it => (it.tags || []).map(t => {
+    const lbl = { popular: "Popular", premiada: "Premiada", economica: "Económica", nuevo: "Nuevo", autor: "De autor" }[t] || t;
     return `<span class="tag ${t}">${lbl}</span>`;
   }).join("");
 
@@ -190,7 +189,8 @@
         <div class="mgrid">${items.map(i => {
           const ok = disponible(i);
           const otro = disponibleEn(i).find(l => l !== state.local);
-          return `<div class="item ${ok ? "" : "na"}">
+          return `<div class="item ${ok ? "" : "na"} ${i.img ? "has-img" : ""}">
+            ${i.img ? `<img class="item-img" src="${i.img}" alt="" loading="lazy" width="64" height="64">` : ""}
             <div class="item-info">
               <div class="item-name">${esc(i.nm)} ${tagsHTML(i)}</div>
               ${i.desc ? `<div class="item-desc">${esc(i.desc)}</div>` : ""}
@@ -210,7 +210,8 @@
     const list = (cat, n) => MENU.filter(i => i.cat === cat).slice(0, n).map(i => `
       <li><span class="ln">${esc(i.nm)}${i.desc ? `<small>${esc(i.desc)}</small>` : ""}</span><span class="fill"></span>${priceHTML(i)}<span data-ctl="${i.id}">${control(i.id)}</span></li>`).join("");
     $("#listaPostres").innerHTML = list("postres", 6);
-    $("#listaTragos").innerHTML = list("tragos", 6);
+    $("#listaTragos").innerHTML = ["mj1", "ct1", "mj2", "so1", "ct2", "ct3"].map(id => ITEM[id]).filter(Boolean).map(i => `
+      <li><span class="ln">${esc(i.nm)}${i.desc ? `<small>${esc(i.desc)}</small>` : ""}</span><span class="fill"></span>${priceHTML(i)}<span data-ctl="${i.id}">${control(i.id)}</span></li>`).join("");
   }
 
   function renderHH() {
@@ -223,8 +224,11 @@
   /* ---------- reseñas / instagram / ubicación ---------- */
   function renderReviews() {
     $("#revTrack").innerHTML = RESENAS.map(r => `
-      <article class="rev"><div class="stars" aria-label="5 estrellas">★★★★★</div><p>${esc(r.txt)}</p>
-      <footer><b>${esc(r.autor)}</b><span>Reseña en ${esc(r.fuente)}</span></footer></article>`).join("");
+      <article class="rev ${r.titulo && !r.txt ? "rev-t" : ""}">
+        ${r.titulo ? `<h3 class="rev-title">“${esc(r.titulo)}”</h3>` : ""}
+        ${r.txt ? `<p>${esc(r.txt)}</p>` : ""}
+        <footer><b>${esc(r.autor)}</b><span>Reseña en ${esc(r.fuente)}</span>${r.url ? `<a href="${r.url}" target="_blank" rel="noopener">Leer reseña →</a>` : ""}</footer>
+      </article>`).join("");
   }
   function renderIG() {
     $("#igGrid").innerHTML = INSTAGRAM_POSTS.map(p => `
@@ -243,6 +247,7 @@
     if (fr.dataset.src !== l.mapsEmbed) { fr.dataset.src = l.mapsEmbed; fr.src = l.mapsEmbed; fr.title = "Mapa " + l.nombre; }
     $("#ubicInfo").innerHTML = `
       <div class="info-card"><h4>Dirección</h4><p class="big">${esc(l.direccion)}</p><p>${esc(l.zona)}</p></div>
+      <div class="info-card"><h4>Pedidos y contacto</h4><p>WhatsApp ${esc(l.telefono)}${l.fijo ? `<br>Teléfono fijo ${esc(l.fijo)}` : ""}</p></div>
       <div class="info-card"><h4>Horario</h4><p style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span class="dot ${e.open ? "open" : "closed"}"></span>${e.txt}</p>
         ${l.horarioTexto.map(([d, h]) => `<p>${d}: ${h}</p>`).join("")}</div>
       <div class="info-actions">
@@ -328,7 +333,7 @@
       : `<div class="cart-empty"><div class="emo">🥟</div><p class="big">Tu pedido está vacío</p><p>Agrega tus empanadas favoritas desde la carta.</p><a href="#carta" class="link-arrow" data-close-cart>Ir a la carta</a></div>`;
 
     // sugerencia de bebida
-    const tieneBebida = L.some(l => BEBIDAS.has(l.it.cat));
+    const tieneBebida = L.some(l => CAT[l.it.cat].bebida);
     const sug = SUGERENCIAS.map(id => ITEM[id]).filter(i => i && disponible(i) && !state.cart[i.id]);
     $("#upsell").hidden = !L.length || tieneBebida || !sug.length;
     $("#upsellRow").innerHTML = sug.map(i => `<button class="up-chip" data-add="${i.id}">+ ${esc(i.nm)} <b>${i.precio ? fmt(i.precio) : ""}</b></button>`).join("");
