@@ -4,13 +4,12 @@
    Único archivo que necesitas tocar para cambiar precios,
    productos, horarios o números de WhatsApp.
 
-   Fuente de productos y precios: carta oficial en PDF
+   La carta de la web es la del local Península. Fuente de
+   productos y precios: carta oficial en PDF
    (assets/carta-dona-filomena.pdf, versión del 6-11-2026).
    "pedido" = marcado como lo más pedido en la carta o en ventas.
 
    - precio: número sin puntos (4500). null = "Consultar".
-   - en: locales donde está disponible. Si no lo pones,
-     se usa el de la categoría.
    - tags: "pedido", "casa", "economica", "nuevo"
    - pre (en la categoría): texto que se antepone al nombre en el
      carrito y en el WhatsApp ("Empanada de horno" + "Pino")
@@ -39,14 +38,14 @@ const LOCALES = {
     },
     horarioTexto: [["Dom – Jue", "12:00 – 00:00"], ["Vie – Sáb", "12:00 – 01:00"]],
     entrega: ["delivery", "retiro"],
-    notaDelivery: "Delivery GRATIS dentro de Península",
+    notaDelivery: "Delivery gratis en Península · otros sectores $3.500",
     destacados: ["Terraza con música en vivo", "Zona infantil (ticket $3.000)", "Bar y Happy Hour", "Menú del día Lun–Jue", "Delivery gratis en Península"]
   },
   zofri: {
     id: "zofri",
     corto: "Zofri",
     nombre: "Doña Filomena Zofri",
-    tipo: "Cocina chilena · Pizza · Empanadas",
+    tipo: "En Mall Zofri",
     direccion: "Mall Zofri, Etapa 7",
     zona: "Zona Franca, Iquique",
     whatsapp: "56953426548",
@@ -60,9 +59,7 @@ const LOCALES = {
       4: ["11:00", "19:00"], 5: ["11:00", "19:00"], 6: ["11:00", "19:00"]
     },
     horarioTexto: [["Lun – Sáb", "11:00 – 19:00"], ["Domingo", "Cerrado"]],
-    entrega: ["retiro"],
-    notaDelivery: "Pide por WhatsApp y retira sin filas en Mall Zofri",
-    destacados: ["Ideal para tu día de compras", "Empanadas recién hechas", "Pizzas familiares", "Retiro sin filas"]
+    destacados: ["Ideal para tu día de compras", "Pedidos y consultas por WhatsApp"]
   }
 };
 
@@ -73,34 +70,37 @@ const HAPPY_HOUR = {
   promo: "3x2 en schop de 500 cc seleccionados y promos en sour, mojitos y destilados"
 };
 
-const AMBOS = ["peninsula", "zofri"];
-const PEN = ["peninsula"];
+/* Cargos que se suman al pedido para llevar o con delivery (Península).
+   - empaque: una vez por pedido que lleve algo distinto de pizza
+   - cajaPizza: por cada pizza
+   - deliveryFuera: despacho fuera de Península (dentro es gratis) */
+const CARGOS = { empaque: 500, cajaPizza: 500, deliveryFuera: 3500 };
 
 const CATEGORIAS = [
-  { id: "ejecutivo", nombre: "Menú del día",        sub: "Lunes a jueves · 12:00 a 16:00",                              en: PEN },
-  { id: "fritas",    nombre: "Empanadas fritas",    sub: "Un 21 de Mayo sin empanadas no es 21 de Mayo. Y un día cualquiera, tampoco.", en: AMBOS, pre: "Empanada frita" },
-  { id: "horno",     nombre: "Empanadas de horno",  sub: "La de pino es la más pedida de la casa",                      en: AMBOS, pre: "Empanada de horno" },
-  { id: "sinenvidia",nombre: "Las Sin Envidia",     sub: "Nuestras empanadas de horno en formato para compartir… o no", en: AMBOS },
-  { id: "pizzas",    nombre: "Pizzas familiares",   sub: "Con nombres de nuestra tierra: Azapa, Cavancha, Huayquique, Matilla, la Pampa…", en: AMBOS, pre: "Pizza" },
-  { id: "sandwich",  nombre: "Sándwiches",          sub: "Contundentes, como debe ser",                                 en: AMBOS, pre: "Sándwich" },
-  { id: "tablas",    nombre: "Para compartir",      sub: "Al centro de la mesa",                                        en: PEN },
-  { id: "entradas",  nombre: "Para empezar",        sub: "Lo primero que llega a la mesa y lo primero que desaparece",  en: PEN },
-  { id: "ceviches",  nombre: "Ceviches",            sub: "Frescos, como los pide el Pacífico iquiqueño",                en: PEN },
-  { id: "gredas",    nombre: "Gredas",              sub: "Servidas hirviendo, como en la casa de la abuela",            en: PEN },
-  { id: "pescados",  nombre: "Del mar",             sub: "Iquique mira al mar, y nuestra cocina también",               en: PEN },
-  { id: "pastas",    nombre: "Risottos y pastas",   sub: "Del wok a la mesa",                                           en: PEN },
-  { id: "carnes",    nombre: "De la tierra",        sub: "Para los que llegan con hambre de verdad",                    en: PEN },
-  { id: "ensaladas", nombre: "Ensaladas y agregados", sub: "Frescas, y los acompañamientos de siempre",                 en: PEN },
-  { id: "ninos",     nombre: "Para los niños",      sub: "Solo para los más chicos",                                    en: PEN, pre: "Menú niños" },
-  { id: "postres",   nombre: "Postres",             sub: "Pastelería artesanal, hecha para terminar bien",              en: AMBOS },
-  { id: "cafe",      nombre: "Café y té",           sub: "Para la hora del té",                                         en: AMBOS, bebida: true },
-  { id: "jugos",     nombre: "Jugos y bebidas",     sub: "Naturales, preparados al momento",                            en: AMBOS, bebida: true },
-  { id: "jarras",    nombre: "Jarras 1,5 L",        sub: "Para toda la mesa",                                           en: PEN, bebida: true },
-  { id: "schop",     nombre: "Schop y cervezas",    sub: "Bien heladas",                                                en: PEN, bebida: true },
-  { id: "mojitos",   nombre: "Mojitos",             sub: "Con Havana Club y hierba buena",                              en: PEN, bebida: true },
-  { id: "sours",     nombre: "Sour y catedrales",   sub: "El sour en tamaño Doña Filomena",                             en: PEN, bebida: true },
-  { id: "cocteles",  nombre: "Coctelería",          sub: "Firma de la casa: Filomena Pasión",                           en: PEN, bebida: true },
-  { id: "vinos",     nombre: "Vinos y destilados",  sub: "Por copa, botella o en las rocas",                            en: PEN, bebida: true }
+  { id: "ejecutivo", nombre: "Menú del día",        sub: "Lunes a jueves · 12:00 a 16:00" },
+  { id: "fritas",    nombre: "Empanadas fritas",    sub: "Un 21 de Mayo sin empanadas no es 21 de Mayo. Y un día cualquiera, tampoco.", pre: "Empanada frita" },
+  { id: "horno",     nombre: "Empanadas de horno",  sub: "La de pino es la más pedida de la casa", pre: "Empanada de horno" },
+  { id: "sinenvidia",nombre: "Las Sin Envidia",     sub: "Nuestras empanadas de horno en formato para compartir… o no" },
+  { id: "pizzas",    nombre: "Pizzas familiares",   sub: "Con nombres de nuestra tierra: Azapa, Cavancha, Huayquique, Matilla, la Pampa…", pre: "Pizza" },
+  { id: "sandwich",  nombre: "Sándwiches",          sub: "Contundentes, como debe ser", pre: "Sándwich" },
+  { id: "tablas",    nombre: "Para compartir",      sub: "Al centro de la mesa" },
+  { id: "entradas",  nombre: "Para empezar",        sub: "Lo primero que llega a la mesa y lo primero que desaparece" },
+  { id: "ceviches",  nombre: "Ceviches",            sub: "Frescos, como los pide el Pacífico iquiqueño" },
+  { id: "gredas",    nombre: "Gredas",              sub: "Servidas hirviendo, como en la casa de la abuela" },
+  { id: "pescados",  nombre: "Del mar",             sub: "Iquique mira al mar, y nuestra cocina también" },
+  { id: "pastas",    nombre: "Risottos y pastas",   sub: "Del wok a la mesa" },
+  { id: "carnes",    nombre: "De la tierra",        sub: "Para los que llegan con hambre de verdad" },
+  { id: "ensaladas", nombre: "Ensaladas y agregados", sub: "Frescas, y los acompañamientos de siempre" },
+  { id: "ninos",     nombre: "Para los niños",      sub: "Solo para los más chicos", pre: "Menú niños" },
+  { id: "postres",   nombre: "Postres",             sub: "Pastelería artesanal, hecha para terminar bien" },
+  { id: "cafe",      nombre: "Café y té",           sub: "Para la hora del té", bebida: true },
+  { id: "jugos",     nombre: "Jugos y bebidas",     sub: "Naturales, preparados al momento", bebida: true },
+  { id: "jarras",    nombre: "Jarras 1,5 L",        sub: "Para toda la mesa", bebida: true },
+  { id: "schop",     nombre: "Schop y cervezas",    sub: "Bien heladas", bebida: true },
+  { id: "mojitos",   nombre: "Mojitos",             sub: "Con Havana Club y hierba buena", bebida: true },
+  { id: "sours",     nombre: "Sour y catedrales",   sub: "El sour en tamaño Doña Filomena", bebida: true },
+  { id: "cocteles",  nombre: "Coctelería",          sub: "Firma de la casa: Filomena Pasión", bebida: true },
+  { id: "vinos",     nombre: "Vinos y destilados",  sub: "Por copa, botella o en las rocas", bebida: true }
 ];
 
 const MENU = [

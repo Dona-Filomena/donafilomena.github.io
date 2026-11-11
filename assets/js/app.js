@@ -9,6 +9,7 @@
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
   const ITEM = Object.fromEntries(MENU.map(i => [i.id, i]));
   const CAT = Object.fromEntries(CATEGORIAS.map(c => [c.id, c]));
+  const LOCAL = LOCALES.peninsula;            // local que recibe los pedidos de la web
   const DIAS = ["domingo", "lunes", "martes", "miércoles", "jueves", "viernes", "sábado"];
   const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -17,9 +18,12 @@
   const norm = s => String(s || "").normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
   const toMin = hm => { const [h, m] = hm.split(":").map(Number); return h * 60 + m; };
   const hm = min => { const m = ((min % 1440) + 1440) % 1440; return String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0"); };
-  const disponibleEn = item => item.en || CAT[item.cat].en;
-  const nombreItem = it => { const pre = CAT[it.cat].pre; return pre && !norm(it.nm).startsWith(norm(pre).split(" ")[0]) && !/^hamburguesa/i.test(it.nm) ? `${pre} ${it.nm}` : it.nm; };
-  const disponible = (item, local = state.local) => disponibleEn(item).includes(local);
+  const waLink = (num, txt) => `https://wa.me/${num}${txt ? "?text=" + encodeURIComponent(txt) : ""}`;
+  // "Empanada de horno" + "Pino": los nombres se repiten entre categorías
+  const nombreItem = it => {
+    const pre = CAT[it.cat].pre;
+    return pre && !norm(it.nm).startsWith(norm(pre).split(" ")[0]) && !/^hamburguesa/i.test(it.nm) ? `${pre} ${it.nm}` : it.nm;
+  };
 
   /* ---------- almacenamiento seguro ---------- */
   const store = {
@@ -28,9 +32,9 @@
   };
 
   const state = {
-    local: LOCALES[store.get("df-local")] ? store.get("df-local") : "peninsula",
     cart: Object.fromEntries(Object.entries(store.get("df-cart", {})).filter(([id, q]) => ITEM[id] && q > 0)),
-    modo: null,
+    modo: LOCAL.entrega[0],   // "delivery" | "retiro"
+    zona: null,               // "peninsula" | "otro" (solo delivery)
     q: "",
     cat: "fritas"
   };
@@ -85,10 +89,10 @@
 
   /* ---------- controles + / stepper ---------- */
   const ICON_PLUS = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/></svg>';
+  const ICON_WA = '<svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-wa"/></svg>';
 
   function control(id) {
     const it = ITEM[id], q = state.cart[id] || 0;
-    if (!disponible(it)) return "";
     if (!q) return `<button class="add" data-add="${id}" aria-label="Agregar ${esc(it.nm)}">${ICON_PLUS}</button>`;
     return `<span class="step" role="group" aria-label="Cantidad de ${esc(it.nm)}">
       <button data-dec="${id}" aria-label="Quitar uno">−</button><b aria-live="polite">${q}</b><button data-inc="${id}" aria-label="Agregar uno">+</button></span>`;
@@ -107,11 +111,13 @@
       const e = estado(l);
       const img = l.foto
         ? `<img src="${l.foto}" alt="Fachada de ${esc(l.nombre)}" loading="lazy">`
-        : `<div class="loc-ph"><span>Zofri<small>Mall Zofri · Etapa 7</small></span></div>`;
-      return `<article class="loc ${l.id === state.local ? "sel" : ""}" data-loc="${l.id}">
+        : `<div class="loc-ph"><span>${esc(l.corto)}<small>${esc(l.direccion)}</small></span></div>`;
+      const pedir = l === LOCAL
+        ? `<a class="btn btn-primary" href="#carta">Hacer mi pedido</a>`
+        : `<a class="btn btn-wa" href="${waLink(l.whatsapp, `Hola, quiero hacer un pedido en ${l.nombre}`)}" target="_blank" rel="noopener">${ICON_WA}Pedir por WhatsApp</a>`;
+      return `<article class="loc">
         <div class="loc-img">${img}
           <span class="loc-status"><span class="dot ${e.open ? "open" : "closed"}"></span>${e.txt}</span>
-          <span class="loc-selbadge">Pidiendo aquí</span>
         </div>
         <div class="loc-body">
           <span class="loc-tipo">${esc(l.tipo)}</span>
@@ -120,7 +126,7 @@
           <dl class="loc-hours">${l.horarioTexto.map(([d, h]) => `<dt>${d}</dt><dd>${h}</dd>`).join("")}</dl>
           <ul class="loc-feats">${l.destacados.map(f => `<li>${esc(f)}</li>`).join("")}</ul>
           <div class="loc-actions">
-            <button class="btn btn-primary" data-pedir="${l.id}">Pedir en ${esc(l.corto)}</button>
+            ${pedir}
             <a class="btn btn-ghost" href="${l.maps}" target="_blank" rel="noopener">Cómo llegar</a>
           </div>
         </div>
@@ -128,40 +134,20 @@
     }).join("");
   }
 
-  function renderCompare() {
-    const ids = Object.keys(LOCALES);
-    const rows = CATEGORIAS.map(c => {
-      const cells = ids.map(l => MENU.filter(i => i.cat === c.id && disponibleEn(i).includes(l)).length);
-      return { nombre: c.nombre, cells: cells.map(n => n ? `<span class="c-yes">Sí <small>· ${n} ${n === 1 ? "opción" : "opciones"}</small></span>` : `<span class="c-no">No</span>`), diff: cells.some(n => !n) && cells.some(n => n) };
-    });
-    [["delivery", "Delivery"], ["retiro", "Retiro en local"]].forEach(([k, n]) => {
-      const has = ids.map(l => LOCALES[l].entrega.includes(k));
-      rows.push({ nombre: n, cells: has.map(h => h ? `<span class="c-yes">Sí</span>` : `<span class="c-no">No</span>`), diff: has.some(Boolean) && has.some(h => !h) });
-    });
-    $("#compareTable").innerHTML =
-      `<div class="c-row head" role="row"><span role="columnheader">Carta</span>${ids.map(l => `<span role="columnheader">${LOCALES[l].corto}</span>`).join("")}</div>` +
-      rows.map(r => `<div class="c-row ${r.diff ? "diff" : "same"}" role="row"><span role="cell">${esc(r.nombre)}</span>${r.cells.map(c => `<span role="cell">${c}</span>`).join("")}</div>`).join("");
-    applyDiffFilter();
-  }
-  function applyDiffFilter() {
-    const only = $("#onlyDiff").checked;
-    $$("#compareTable .c-row.same").forEach(r => r.classList.toggle("hide", only));
-  }
-
   /* ---------- carta ---------- */
   function renderTabs() {
     const q = !!state.q.trim();
     $("#tabs").innerHTML = CATEGORIAS.map(c => {
-      const n = MENU.filter(i => i.cat === c.id && disponible(i)).length;
+      const n = MENU.filter(i => i.cat === c.id).length;
       const on = !q && c.id === state.cat;
-      return `<button class="tab ${on ? "on" : ""} ${n ? "" : "off"}" data-tab="${c.id}" aria-pressed="${on}">${esc(c.nombre)}${n ? ` <small>${n}</small>` : ""}</button>`;
+      return `<button class="tab ${on ? "on" : ""}" data-tab="${c.id}" aria-pressed="${on}">${esc(c.nombre)} <small>${n}</small></button>`;
     }).join("");
     const on = $("#tabs .tab.on");
     if (on) { const tabs = $("#tabs"); tabs.scrollTo({ left: on.offsetLeft - tabs.clientWidth / 2 + on.offsetWidth / 2, behavior: reduceMotion ? "auto" : "smooth" }); }
   }
 
   function renderFavs() {
-    const favs = MENU.filter(i => i.img && (i.tags || []).some(t => t === "pedido" || t === "casa") && disponible(i));
+    const favs = MENU.filter(i => i.img && (i.tags || []).some(t => t === "pedido" || t === "casa"));
     $("#favs").innerHTML = favs.map(i => `
       <article class="fcard">
         <div class="fcard-img"><img src="${i.img}" alt="${esc(i.nm)}" loading="lazy"><div class="tagrow">${tagsHTML(i)}</div></div>
@@ -175,31 +161,24 @@
 
   function renderMenu() {
     const q = norm(state.q.trim());
-    const loc = LOCALES[state.local];
     let total = 0;
     $("#menuList").innerHTML = CATEGORIAS.map(c => {
       if (!q && c.id !== state.cat) return "";
       let items = MENU.filter(i => i.cat === c.id);
       if (q) items = items.filter(i => norm(i.nm + " " + (i.desc || "") + " " + c.nombre).includes(q));
       if (!items.length) return "";
-      items.sort((a, b) => disponible(b) - disponible(a));
       total += items.length;
       return `<div class="mcat" id="cat-${c.id}">
         <h3 class="cat-title">${esc(c.nombre)}</h3>
-        <p class="cat-sub">${esc(c.sub)}${c.en.includes(state.local) ? "" : ` · <b>no disponible en ${loc.corto}</b>`}</p>
-        <div class="mgrid">${items.map(i => {
-          const ok = disponible(i);
-          const otro = disponibleEn(i).find(l => l !== state.local);
-          return `<div class="item ${ok ? "" : "na"} ${i.img ? "has-img" : ""}">
+        <p class="cat-sub">${esc(c.sub)}</p>
+        <div class="mgrid">${items.map(i => `<div class="item ${i.img ? "has-img" : ""}">
             ${i.img ? `<img class="item-img" src="${i.img}" alt="" loading="lazy" width="64" height="64">` : ""}
             <div class="item-info">
               <div class="item-name">${esc(i.nm)} ${tagsHTML(i)}</div>
               ${i.desc ? `<div class="item-desc">${esc(i.desc)}</div>` : ""}
-              ${ok ? "" : `<div class="item-na">Solo en ${LOCALES[otro].corto} · <button data-switch-local="${otro}">pedir allá</button></div>`}
             </div>
             <div class="item-right">${priceHTML(i)}<span data-ctl="${i.id}">${control(i.id)}</span></div>
-          </div>`;
-        }).join("")}</div>
+          </div>`).join("")}</div>
       </div>`;
     }).join("");
     $("#favsWrap").hidden = !!q;
@@ -208,11 +187,10 @@
   }
 
   function renderDulce() {
-    const list = (cat, n) => MENU.filter(i => i.cat === cat).slice(0, n).map(i => `
-      <li><span class="ln">${esc(i.nm)}${i.desc ? `<small>${esc(i.desc)}</small>` : ""}</span><span class="fill"></span>${priceHTML(i)}<span data-ctl="${i.id}">${control(i.id)}</span></li>`).join("");
-    $("#listaPostres").innerHTML = list("postres", 6);
-    $("#listaTragos").innerHTML = ["ct1", "so7", "mj2", "so1", "ct3", "ct8"].map(id => ITEM[id]).filter(Boolean).map(i => `
-      <li><span class="ln">${esc(i.nm)}${i.desc ? `<small>${esc(i.desc)}</small>` : ""}</span><span class="fill"></span>${priceHTML(i)}<span data-ctl="${i.id}">${control(i.id)}</span></li>`).join("");
+    const fila = i => `
+      <li><span class="ln">${esc(i.nm)}${i.desc ? `<small>${esc(i.desc)}</small>` : ""}</span><span class="fill"></span>${priceHTML(i)}<span data-ctl="${i.id}">${control(i.id)}</span></li>`;
+    $("#listaPostres").innerHTML = MENU.filter(i => i.cat === "postres").slice(0, 6).map(fila).join("");
+    $("#listaTragos").innerHTML = ["ct1", "so7", "mj2", "so1", "ct3", "ct8"].map(id => ITEM[id]).filter(Boolean).map(fila).join("");
   }
 
   function renderHH() {
@@ -251,7 +229,7 @@
         <span class="ig-ov"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7.5-4.6-9.5-9.1C1.1 8.6 3 5 6.6 5c2.1 0 3.6 1.2 5.4 3.1C13.8 6.2 15.3 5 17.4 5 21 5 22.9 8.6 21.5 11.9 19.5 16.4 12 21 12 21z" fill="currentColor"/></svg>Ver en Instagram</span>
       </a>`).join("");
   }
-  let ubicLocal = null;
+  let ubicLocal = "peninsula";
   function renderUbic(id) {
     ubicLocal = id;
     const l = LOCALES[id], e = estado(l);
@@ -265,51 +243,38 @@
       <div class="info-card"><h4>Horario</h4><p style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span class="dot ${e.open ? "open" : "closed"}"></span>${e.txt}</p>
         ${l.horarioTexto.map(([d, h]) => `<p>${d}: ${h}</p>`).join("")}</div>
       <div class="info-actions">
-        <a class="btn btn-wa" href="https://wa.me/${l.whatsapp}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-wa"/></svg>WhatsApp</a>
+        <a class="btn btn-wa" href="${waLink(l.whatsapp)}" target="_blank" rel="noopener">${ICON_WA}WhatsApp</a>
         <a class="btn btn-ghost" href="tel:${l.telefono.replace(/\s/g, "")}">Llamar</a>
         <a class="btn btn-ghost" href="${l.maps}" target="_blank" rel="noopener">Cómo llegar</a>
       </div>`;
   }
-
-  /* ---------- local seleccionado ---------- */
-  function placeThumbs() {
-    $$(".seg").forEach(seg => {
-      const on = $('button[aria-checked="true"]', seg), th = $(".seg-thumb", seg);
-      if (!on || !th || !on.offsetWidth) return;
-      th.style.width = on.offsetWidth + "px";
-      th.style.transform = `translateX(${on.offsetLeft - 4}px)`;
-    });
-  }
-  function setLocal(id, opts = {}) {
-    if (!LOCALES[id]) return;
-    const cambio = id !== state.local;
-    state.local = id;
-    store.set("df-local", id);
-    if (!LOCALES[id].entrega.includes(state.modo)) state.modo = LOCALES[id].entrega[0];
-    $$(".seg button").forEach(b => b.setAttribute("aria-checked", b.dataset.local === id));
-    placeThumbs();
-    $$(".loc").forEach(c => c.classList.toggle("sel", c.dataset.loc === id));
-    $("#cartaLocal").textContent = LOCALES[id].corto;
-    $("#waFloat").href = "https://wa.me/" + LOCALES[id].whatsapp;
-    renderHeroStatus();
-    renderFavs(); renderMenu(); renderDulce();
-    renderUbic(id);
-    renderCart();
-    if (cambio && !opts.silent) {
-      const fuera = Object.keys(state.cart).filter(k => !disponible(ITEM[k]));
-      toast(fuera.length ? `Pidiendo en ${LOCALES[id].corto} · ${fuera.length} producto${fuera.length > 1 ? "s" : ""} no está${fuera.length > 1 ? "n" : ""} aquí` : `Pidiendo en ${LOCALES[id].nombre}`);
-    }
-  }
   function renderHeroStatus() {
-    const l = LOCALES[state.local], e = estado(l);
+    const e = estado(LOCAL);
     $("#heroDot").className = "dot " + (e.open ? "open" : "closed");
-    $("#heroStatus").textContent = `${l.corto} · ${e.txt}`;
+    $("#heroStatus").textContent = `${LOCAL.corto} · ${e.txt}`;
   }
 
   /* ---------- carrito ---------- */
   const lineas = () => Object.entries(state.cart).map(([id, q]) => ({ it: ITEM[id], q }));
   const cantidad = () => lineas().reduce((s, l) => s + l.q, 0);
   const subtotal = () => lineas().reduce((s, l) => s + (l.it.precio || 0) * l.q, 0);
+
+  // Cargos del pedido: empaque, cajas de pizza y delivery. monto null = falta elegir sector.
+  function cargos() {
+    const L = lineas(), out = [];
+    if (!L.length) return out;
+    const pizzas = L.filter(l => l.it.cat === "pizzas").reduce((s, l) => s + l.q, 0);
+    if (CARGOS.empaque && L.some(l => l.it.cat !== "pizzas")) out.push({ nm: "Empaque", monto: CARGOS.empaque });
+    if (CARGOS.cajaPizza && pizzas) out.push({ nm: `Caja de pizza × ${pizzas}`, monto: CARGOS.cajaPizza * pizzas });
+    if (state.modo === "delivery") {
+      if (state.zona === "peninsula") out.push({ nm: "Delivery en Península", monto: 0 });
+      else if (state.zona === "otro") out.push({ nm: "Delivery fuera de Península", monto: CARGOS.deliveryFuera });
+      else out.push({ nm: "Delivery", monto: null });
+    }
+    return out;
+  }
+  const total = () => subtotal() + cargos().reduce((s, c) => s + (c.monto || 0), 0);
+  const montoTxt = c => c.monto == null ? "Elige el sector" : c.monto === 0 ? "Gratis" : fmt(c.monto);
 
   function setQty(id, q) {
     if (q > 0) state.cart[id] = q; else delete state.cart[id];
@@ -320,49 +285,54 @@
   function add(id) {
     const it = ITEM[id];
     if (!it) return;
-    if (!disponible(it)) { toast(`${it.nm} no está en ${LOCALES[state.local].corto}`); return; }
     setQty(id, (state.cart[id] || 0) + 1);
     toast(`Agregado: ${nombreItem(it)}`);
     const b = $("#cartBtn"); b.classList.remove("bump"); void b.offsetWidth; b.classList.add("bump");
   }
 
   function renderCart() {
-    const n = cantidad(), t = subtotal(), L = lineas();
-    const loc = LOCALES[state.local];
+    const n = cantidad(), sub = subtotal(), L = lineas(), C = cargos();
     $("#cartCount").textContent = n; $("#cartCount").classList.toggle("on", n > 0);
-    $("#fbarN").textContent = n; $("#fbarT").textContent = fmt(t);
+    $("#fbarN").textContent = n; $("#fbarT").textContent = fmt(sub);
     $("#fbar").classList.toggle("on", n > 0);
     document.body.classList.toggle("has-cart", n > 0);
-    $("#cartTotal").textContent = fmt(t);
+    $("#cartTotal").textContent = fmt(total());
 
     $("#cartItems").innerHTML = L.length ? L.map(({ it, q }) => `
       <div class="ci">
         <div class="ci-info">
           <div class="ci-name">${esc(nombreItem(it))}</div>
           <div class="ci-sub">${it.precio == null ? "Precio a confirmar" : fmt(it.precio * q)}${q > 1 && it.precio ? ` · ${fmt(it.precio)} c/u` : ""}</div>
-          ${disponible(it) ? "" : `<div class="ci-warn">No disponible en ${loc.corto}</div>`}
         </div>
-        <span class="step" role="group" aria-label="Cantidad de ${esc(it.nm)}"><button data-dec="${it.id}" aria-label="Quitar uno">−</button><b>${q}</b><button data-inc="${it.id}" aria-label="Agregar uno" ${disponible(it) ? "" : "disabled"}>+</button></span>
+        <span class="step" role="group" aria-label="Cantidad de ${esc(it.nm)}"><button data-dec="${it.id}" aria-label="Quitar uno">−</button><b>${q}</b><button data-inc="${it.id}" aria-label="Agregar uno">+</button></span>
       </div>`).join("")
       : `<div class="cart-empty"><div class="emo">🥟</div><p class="big">Tu pedido está vacío</p><p>Agrega tus empanadas favoritas desde la carta.</p><a href="#carta" class="link-arrow" data-close-cart>Ir a la carta</a></div>`;
 
+    // desglose
+    $("#resumen").hidden = !L.length;
+    $("#resumen").innerHTML = `<div><dt>Productos</dt><dd>${fmt(sub)}</dd></div>` +
+      C.map(c => `<div class="${c.monto == null ? "pend" : ""}"><dt>${esc(c.nm)}</dt><dd>${montoTxt(c)}</dd></div>`).join("");
+
     // sugerencia de bebida
     const tieneBebida = L.some(l => CAT[l.it.cat].bebida);
-    const sug = SUGERENCIAS.map(id => ITEM[id]).filter(i => i && disponible(i) && !state.cart[i.id]);
+    const sug = SUGERENCIAS.map(id => ITEM[id]).filter(i => i && !state.cart[i.id]);
     $("#upsell").hidden = !L.length || tieneBebida || !sug.length;
     $("#upsellRow").innerHTML = sug.map(i => `<button class="up-chip" data-add="${i.id}">+ ${esc(i.nm)} <b>${i.precio ? fmt(i.precio) : ""}</b></button>`).join("");
 
-    // modo de entrega
-    if (!loc.entrega.includes(state.modo)) state.modo = loc.entrega[0];
-    $("#modoChoice").innerHTML = loc.entrega.map(m => `<label><input type="radio" name="modo" value="${m}" ${m === state.modo ? "checked" : ""}><span>${m === "delivery" ? "🛵 Delivery" : "🛍️ Retiro en local"}</span></label>`).join("");
-    $("#modoHint").textContent = loc.notaDelivery;
-    $("#dirField").hidden = state.modo !== "delivery";
+    // entrega y sector
+    const radio = (name, val, sel, txt) => `<label><input type="radio" name="${name}" value="${val}" ${sel ? "checked" : ""}><span>${txt}</span></label>`;
+    $("#modoChoice").innerHTML = LOCAL.entrega.map(m => radio("modo", m, m === state.modo, m === "delivery" ? "🛵 Delivery" : "🛍️ Retiro en local")).join("");
+    $("#modoHint").textContent = state.modo === "delivery" ? LOCAL.notaDelivery : `Retiras en ${LOCAL.direccion}, ${LOCAL.zona}`;
+    $("#zonaField").hidden = $("#dirField").hidden = state.modo !== "delivery";
+    $("#zonaChoice").innerHTML =
+      radio("zona", "peninsula", state.zona === "peninsula", "Península · Gratis") +
+      radio("zona", "otro", state.zona === "otro", `Otro sector · ${fmt(CARGOS.deliveryFuera)}`);
     $("#checkout").hidden = !L.length;
 
     const pendientes = L.filter(l => l.it.precio == null).length;
     $("#totalNote").textContent = !L.length ? "" :
       (pendientes ? `+ ${pendientes} producto${pendientes > 1 ? "s" : ""} con precio a confirmar. ` : "") +
-      (state.modo === "delivery" ? "El local confirma total y tiempo de entrega." : `Retiras en ${loc.direccion}.`);
+      "El local confirma el total y el tiempo.";
     $("#sendWa").disabled = !L.length;
   }
 
@@ -370,7 +340,7 @@
     $("#drawer").classList.add("on"); $("#scrim").classList.add("on");
     $("#drawer").setAttribute("aria-hidden", "false");
     document.documentElement.style.overflow = "hidden";
-    setTimeout(() => { placeThumbs(); $("#drawerClose").focus(); }, 60);
+    setTimeout(() => $("#drawerClose").focus(), 60);
   }
   function closeCart() {
     $("#drawer").classList.remove("on"); $("#scrim").classList.remove("on");
@@ -378,33 +348,36 @@
     document.documentElement.style.overflow = "";
   }
 
-  function marcarError(input, msg) {
-    const f = input.closest(".field"); f.classList.add("err"); input.focus();
+  function marcarError(el, msg) {
+    const f = el.closest(".field"); f.classList.add("err");
+    (el.matches("input, textarea") ? el : $("input", f)).focus();
     toast(msg); setTimeout(() => f.classList.remove("err"), 1600);
   }
 
   function enviarWA() {
-    const L = lineas(), loc = LOCALES[state.local];
+    const L = lineas();
     if (!L.length) { toast("Tu pedido está vacío"); return; }
-    const fuera = L.filter(l => !disponible(l.it));
-    if (fuera.length) { toast(`Quita lo que no está en ${loc.corto}: ${fuera.map(f => nombreItem(f.it)).join(", ")}`); return; }
     const nombre = $("#fNombre").value.trim(), dir = $("#fDir").value.trim(), nota = $("#fNota").value.trim();
     const pago = ($('input[name="pago"]:checked') || {}).value || "Efectivo";
+    const delivery = state.modo === "delivery";
+    if (delivery && !state.zona) return marcarError($("#zonaChoice"), "Elige el sector del despacho");
     if (!nombre) return marcarError($("#fNombre"), "Escribe tu nombre");
-    if (state.modo === "delivery" && !dir) return marcarError($("#fDir"), "Falta la dirección de despacho");
+    if (delivery && !dir) return marcarError($("#fDir"), "Falta la dirección de despacho");
     store.set("df-cliente", { nombre, dir });
 
-    const t = subtotal(), pend = L.filter(l => l.it.precio == null).length;
-    let m = `¡Hola ${loc.nombre}! 👋 Quiero hacer un pedido:\n\n`;
+    const pend = L.filter(l => l.it.precio == null).length;
+    let m = `¡Hola ${LOCAL.nombre}! 👋 Quiero hacer un pedido:\n\n`;
     L.forEach(({ it, q }) => { m += `• ${q} × ${nombreItem(it)} — ${it.precio == null ? "precio a confirmar" : fmt(it.precio * q)}\n`; });
-    m += `\n*Total estimado: ${fmt(t)}*${pend ? " (+ precios a confirmar)" : ""}\n\n`;
-    m += `*Entrega:* ${state.modo === "delivery" ? "Delivery 🛵" : "Retiro en local 🛍️"}\n`;
-    if (state.modo === "delivery") m += `*Dirección:* ${dir}\n`;
+    m += `\nProductos: ${fmt(subtotal())}\n`;
+    cargos().forEach(c => { m += `${c.nm}: ${c.monto === 0 ? "gratis" : fmt(c.monto)}\n`; });
+    m += `*Total estimado: ${fmt(total())}*${pend ? " (+ precios a confirmar)" : ""}\n\n`;
+    m += `*Entrega:* ${delivery ? `Delivery 🛵 (${state.zona === "peninsula" ? "Península" : "fuera de Península"})` : "Retiro en local 🛍️"}\n`;
+    if (delivery) m += `*Dirección:* ${dir}\n`;
     m += `*Nombre:* ${nombre}\n*Pago:* ${pago}\n`;
     if (nota) m += `*Comentarios:* ${nota}\n`;
     m += `\n_Pedido armado en la web. Quedo atento/a a la confirmación._`;
 
-    const url = `https://wa.me/${loc.whatsapp}?text=${encodeURIComponent(m)}`;
+    const url = waLink(LOCAL.whatsapp, m);
     const w = window.open(url, "_blank", "noopener");
     if (!w) location.href = url;
   }
@@ -437,17 +410,11 @@
     if (d.add) { e.preventDefault(); add(d.add); }
     else if (d.inc) { setQty(d.inc, (state.cart[d.inc] || 0) + 1); }
     else if (d.dec) { setQty(d.dec, (state.cart[d.dec] || 0) - 1); }
-    else if (t.closest(".seg") && d.local) { setLocal(d.local); }
-    else if (d.pedir) { setLocal(d.pedir); scrollToEl($("#carta")); }
-    else if (d.switchLocal) { setLocal(d.switchLocal); }
     else if (d.tab) { irACat(d.tab); }
     else if (d.gotoCat) { e.preventDefault(); irACat(d.gotoCat); }
     else if (t.closest("#ubicTabs") && d.local) { renderUbic(d.local); }
     else if ("closeCart" in d) { closeCart(); }
-    else if ("waAsk" in d) {
-      e.preventDefault();
-      window.open(`https://wa.me/${LOCALES[state.local].whatsapp}?text=${encodeURIComponent(`Hola, ¿tienen "${state.q}"?`)}`, "_blank", "noopener");
-    }
+    else if ("waAsk" in d) { e.preventDefault(); window.open(waLink(LOCAL.whatsapp, `Hola, ¿tienen "${state.q}"?`), "_blank", "noopener"); }
   });
 
   $("#cartBtn").addEventListener("click", openCart);
@@ -457,7 +424,7 @@
   $("#sendWa").addEventListener("click", enviarWA);
   $("#checkout").addEventListener("submit", e => { e.preventDefault(); enviarWA(); });
   $("#modoChoice").addEventListener("change", e => { state.modo = e.target.value; renderCart(); });
-  $("#onlyDiff").addEventListener("change", applyDiffFilter);
+  $("#zonaChoice").addEventListener("change", e => { state.zona = e.target.value; renderCart(); });
   document.addEventListener("keydown", e => { if (e.key === "Escape") { closeCart(); toggleNav(false); } });
 
   let qT;
@@ -484,7 +451,6 @@
   // header
   const onScroll = () => $("#hdr").classList.toggle("scrolled", scrollY > 10);
   addEventListener("scroll", onScroll, { passive: true });
-  addEventListener("resize", placeThumbs);
 
   // parallax del hero (solo mouse)
   if (!reduceMotion && matchMedia("(pointer:fine)").matches) {
@@ -507,7 +473,7 @@
   // aparición al hacer scroll
   if ("IntersectionObserver" in window && !reduceMotion) {
     const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); } }), { rootMargin: "0px 0px -8% 0px" });
-    $$(".sec-head, .loc, .compare, .dulce-card, .exp-card, .gcard, .ig-head, .ig-grid, .ubic-grid").forEach(el => { el.classList.add("rv"); io.observe(el); });
+    $$(".sec-head, .loc, .dulce-card, .exp-card, .gcard, .ig-head, .ig-grid, .ubic-grid").forEach(el => { el.classList.add("rv"); io.observe(el); });
   }
 
   /* ---------- inicio ---------- */
@@ -515,15 +481,19 @@
   if (cli.nombre) $("#fNombre").value = cli.nombre;
   if (cli.dir) $("#fDir").value = cli.dir;
   $("#yr").textContent = new Date().getFullYear();
-
   $("#statCarta").textContent = "+" + Math.floor(MENU.length / 10) * 10;
+  $("#waFloat").href = waLink(LOCAL.whatsapp);
+
   renderLocales();
-  renderCompare();
   renderReviews();
   renderIG();
   renderHH();
-  setLocal(state.local, { silent: true });
+  renderHeroStatus();
+  renderFavs();
+  renderMenu();
+  renderDulce();
+  renderUbic(ubicLocal);
+  renderCart();
   onScroll();
-  document.fonts?.ready.then(placeThumbs);
-  setInterval(() => { renderHH(); renderHeroStatus(); renderLocales(); renderUbic(ubicLocal || state.local); }, 60000);
+  setInterval(() => { renderHH(); renderHeroStatus(); renderLocales(); renderUbic(ubicLocal); }, 60000);
 })();

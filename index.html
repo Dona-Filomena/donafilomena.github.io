@@ -45,11 +45,11 @@
     <span>🏆 Mejor Empanada de Iquique · Seremi de Agricultura</span>
     <span>🛵 Delivery GRATIS en Península</span>
     <span>🍹 Happy Hour Lun – Jue 13:00 a 21:00</span>
-    <span>📍 Ahora también en Mall Zofri · Etapa 7</span>
+    <span>📍 También en Mall Zofri · Etapa 7</span>
     <span>🏆 Mejor Empanada de Iquique · Seremi de Agricultura</span>
     <span>🛵 Delivery GRATIS en Península</span>
     <span>🍹 Happy Hour Lun – Jue 13:00 a 21:00</span>
-    <span>📍 Ahora también en Mall Zofri · Etapa 7</span>
+    <span>📍 También en Mall Zofri · Etapa 7</span>
   </div>
 </div>
 
@@ -69,11 +69,6 @@
   </nav>
 
   <div class="hdr-actions">
-    <div class="seg" role="radiogroup" aria-label="Elige tu local">
-      <button role="radio" data-local="peninsula" aria-checked="true">Península</button>
-      <button role="radio" data-local="zofri" aria-checked="false">Zofri</button>
-      <span class="seg-thumb" aria-hidden="true"></span>
-    </div>
     <button class="cart-btn" id="cartBtn" aria-label="Abrir pedido">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.5L21 8H6.2" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20" r="1.4" fill="currentColor"/><circle cx="17" cy="20" r="1.4" fill="currentColor"/></svg>
       <span class="cart-count" id="cartCount">0</span>
@@ -132,34 +127,21 @@
   <div class="sec-head">
     <p class="kicker">Dos casas, un mismo sabor</p>
     <h2>Elige tu <em>Filomena</em></h2>
-    <p class="sec-sub">La casa grande en Península con terraza, barra y delivery; y la versión express en Mall Zofri para tu día de compras. Las cartas no son iguales: aquí ves qué encuentras en cada una.</p>
+    <p class="sec-sub">La casa grande en la Península, con terraza, bar y delivery. Y también en Mall Zofri, Etapa 7, para tu día de compras.</p>
   </div>
 
   <div class="loc-grid" id="locGrid"><!-- render JS --></div>
-
-  <div class="compare">
-    <div class="compare-head">
-      <h3>¿Qué hay en cada carta?</h3>
-      <label class="switch"><input type="checkbox" id="onlyDiff"><span class="switch-ui" aria-hidden="true"></span>Solo diferencias</label>
-    </div>
-    <div class="compare-table" role="table" aria-label="Comparación de cartas" id="compareTable"><!-- render JS --></div>
-  </div>
 </section>
 
 <!-- CARTA -->
 <section class="sec carta" id="carta">
   <div class="sec-head">
     <p class="kicker">Carta interactiva</p>
-    <h2>Arma tu pedido en <em id="cartaLocal">Península</em></h2>
-    <p class="sec-sub">Toca <b>+</b> para agregar. Al final envías todo por WhatsApp y el local te confirma tiempo y total. Precios en pesos chilenos, IVA incluido.</p>
+    <h2>Arma tu pedido en <em>Península</em></h2>
+    <p class="sec-sub">Toca <b>+</b> para agregar. Al final envías todo por WhatsApp y el local te confirma tiempo y total. Precios en pesos chilenos, IVA incluido. ¿Estás en Mall Zofri? <a class="inline-link" href="https://wa.me/56953426548?text=Hola%2C%20quiero%20hacer%20un%20pedido%20en%20Do%C3%B1a%20Filomena%20Zofri" target="_blank" rel="noopener">Pide directo por WhatsApp</a>.</p>
   </div>
 
   <div class="carta-tools">
-    <div class="seg seg-inline" role="radiogroup" aria-label="Local del pedido">
-      <button role="radio" data-local="peninsula" aria-checked="true">Península</button>
-      <button role="radio" data-local="zofri" aria-checked="false">Zofri</button>
-      <span class="seg-thumb" aria-hidden="true"></span>
-    </div>
     <div class="search">
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       <input type="search" id="q" placeholder="Busca: camarón, mojito, tres leches…" autocomplete="off" aria-label="Buscar en la carta">
@@ -339,17 +321,14 @@
   <div class="drawer-hdr">
     <div>
       <h2 id="drawerTitle">Tu pedido</h2>
-      <div class="seg seg-inline seg-sm" role="radiogroup" aria-label="Local que recibe el pedido">
-        <button role="radio" data-local="peninsula" aria-checked="true">Península</button>
-        <button role="radio" data-local="zofri" aria-checked="false">Zofri</button>
-        <span class="seg-thumb" aria-hidden="true"></span>
-      </div>
+      <p class="drawer-local">Doña Filomena Península</p>
     </div>
     <button class="circle-btn" id="drawerClose" aria-label="Cerrar pedido"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button>
   </div>
 
   <div class="drawer-body" id="drawerBody">
     <div class="cart-items" id="cartItems"></div>
+    <dl class="resumen" id="resumen" hidden></dl>
     <div class="upsell" id="upsell" hidden>
       <p>¿Le sumas algo para tomar?</p>
       <div class="upsell-row" id="upsellRow"></div>
@@ -360,6 +339,10 @@
         <legend>¿Cómo lo quieres?</legend>
         <div class="choice" id="modoChoice"></div>
         <p class="hint" id="modoHint"></p>
+      </fieldset>
+      <fieldset class="field" id="zonaField" hidden>
+        <legend>¿A qué sector va el despacho?</legend>
+        <div class="choice" id="zonaChoice"></div>
       </fieldset>
       <label class="field">
         <span>Tu nombre</span>
