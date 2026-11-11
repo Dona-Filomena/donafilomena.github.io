@@ -6,6 +6,7 @@
 <title>Doña Filomena · Empanadas, pizzas y barra en Iquique</title>
 <meta name="description" content="Doña Filomena, la Mejor Empanada de Iquique. Empanadas fritas y de horno, pizzas, pescados, postres y tragos. Pide por WhatsApp en Península de Cavancha o Mall Zofri.">
 <meta name="theme-color" content="#FBF3E6">
+<link rel="preload" as="image" href="assets/img/logo-sello.svg">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <meta property="og:type" content="restaurant.restaurant">
 <meta property="og:title" content="Doña Filomena · La Mejor Empanada de Iquique">
@@ -43,11 +44,11 @@
   <div class="ribbon-track">
     <span>🏆 Mejor Empanada de Iquique · Seremi de Agricultura</span>
     <span>🛵 Delivery GRATIS en Península</span>
-    <span>🍹 Happy Hour Lun – Jue 13:00 a 23:00</span>
+    <span>🍹 Happy Hour Lun – Jue 13:00 a 21:00</span>
     <span>📍 Ahora también en Mall Zofri · Etapa 7</span>
     <span>🏆 Mejor Empanada de Iquique · Seremi de Agricultura</span>
     <span>🛵 Delivery GRATIS en Península</span>
-    <span>🍹 Happy Hour Lun – Jue 13:00 a 23:00</span>
+    <span>🍹 Happy Hour Lun – Jue 13:00 a 21:00</span>
     <span>📍 Ahora también en Mall Zofri · Etapa 7</span>
   </div>
 </div>
@@ -106,7 +107,7 @@
     </div>
     <ul class="trust">
       <li><b>4,2★</b><span>+2.300 opiniones en Google</span></li>
-      <li><b>+300</b><span>platos y tragos en carta</span></li>
+      <li><b id="statCarta">+300</b><span>platos y tragos en carta</span></li>
       <li><b>+20</b><span>años de historia</span></li>
     </ul>
   </div>
@@ -150,7 +151,7 @@
   <div class="sec-head">
     <p class="kicker">Carta interactiva</p>
     <h2>Arma tu pedido en <em id="cartaLocal">Península</em></h2>
-    <p class="sec-sub">Toca <b>+</b> para agregar. Al final envías todo por WhatsApp y el local te confirma tiempo y total.</p>
+    <p class="sec-sub">Toca <b>+</b> para agregar. Al final envías todo por WhatsApp y el local te confirma tiempo y total. Precios en pesos chilenos, IVA incluido.</p>
   </div>
 
   <div class="carta-tools">
@@ -163,6 +164,9 @@
       <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       <input type="search" id="q" placeholder="Busca: camarón, mojito, tres leches…" autocomplete="off" aria-label="Buscar en la carta">
     </div>
+    <a class="pdf-link" href="assets/carta-dona-filomena.pdf" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11m0 0l-4-4m4 4l4-4M5 19h14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Carta en PDF
+    </a>
   </div>
 
   <nav class="tabs" id="tabs" aria-label="Categorías de la carta"><!-- render JS --></nav>
@@ -186,6 +190,7 @@
       <p>Copas de tres leches y tiramisú, panqueque celestino, café de grano y helados. El plan perfecto después de la playa.</p>
       <ul class="leaders" id="listaPostres"><!-- render JS --></ul>
       <a href="#carta" class="link-arrow" data-goto-cat="postres">Ver todos los postres</a>
+      <p class="encargo"><b>Tortas enteras por encargo</b> para 15, 20 y hasta 30 personas: amor, chocolate especial, moka, tres leches, 7 sabores y más. <a href="https://wa.me/56999780334?text=Hola%2C%20quiero%20encargar%20una%20torta%20entera" target="_blank" rel="noopener">Encargar por WhatsApp</a></p>
     </div>
   </article>
 
@@ -196,10 +201,10 @@
       <h2>Mojitos, sours y cócteles <em>de autor</em></h2>
       <div class="hh" id="hhBox">
         <span class="hh-pulse" aria-hidden="true"></span>
-        <div><b id="hhTitle">Happy Hour</b><span id="hhSub">Lun – Jue · 13:00 a 23:00</span></div>
+        <div><b id="hhTitle">Happy Hour</b><span id="hhSub">Lun – Jue · 13:00 a 21:00</span></div>
       </div>
       <ul class="leaders" id="listaTragos"><!-- render JS --></ul>
-      <a href="#carta" class="link-arrow" data-goto-cat="mojitos">Ver la barra completa</a>
+      <a href="#carta" class="link-arrow" data-goto-cat="cocteles">Ver la barra completa</a>
     </div>
   </article>
 </section>
@@ -208,16 +213,16 @@
 <section class="sec exp">
   <div class="sec-head">
     <p class="kicker">Más que comida</p>
-    <h2>Ven a <em>quedarte</em> un rato</h2>
+    <h2>“Si vienes a Iquique, <em>tienes que pasar</em> por Doña Filomena.”</h2>
   </div>
   <div class="exp-grid">
     <article class="exp-card big">
       <img src="assets/img/terraza.webp" alt="Amigas en la terraza de Doña Filomena con música en vivo" loading="lazy" width="867" height="580">
-      <div class="exp-txt"><h3>Terraza y música en vivo</h3><p>Pizzas, jugos y el ambiente único de Cavancha.</p></div>
+      <div class="exp-txt"><h3>Terraza y música en vivo</h3><p>Todo en un solo lugar, en plena Península.</p></div>
     </article>
     <article class="exp-card">
       <img src="assets/img/zona-infantil.webp" alt="Niño jugando en la piscina de pelotas de Doña Filomena" loading="lazy" width="614" height="430">
-      <div class="exp-txt"><h3>Zona infantil gratis</h3><p>Piscina de pelotas para que los peques también disfruten.</p></div>
+      <div class="exp-txt"><h3>Zona infantil</h3><p>Piscina de pelotas y juegos para que los peques también disfruten.</p></div>
     </article>
     <article class="exp-card">
       <img src="assets/img/pizza.webp" alt="Pizza con queso fundido" loading="lazy" width="646" height="428">
@@ -304,13 +309,14 @@
 <footer class="ftr">
   <div class="ftr-top">
     <div>
-      <img class="ftr-logo" src="assets/img/logo-claro.svg" alt="Doña Filomena · Pizzería, Restaurant, Bar" width="240" height="210">
-      <p class="ftr-sub">Iquique, desde 2005</p>
+      <img class="ftr-logo" src="assets/img/logo-claro.svg" alt="" width="180" height="154">
+      <p class="ftr-brand">Doña Filomena</p>
+      <p class="ftr-sub">Todo en un solo lugar · Iquique</p>
     </div>
     <div class="ftr-cols">
       <div><h4>Península</h4><p>Filomena Valenzuela 298<br>Dom–Jue 12:00–00:00<br>Vie–Sáb 12:00–01:00</p></div>
       <div><h4>Zofri</h4><p>Mall Zofri, Etapa 7<br>Lun–Sáb 11:00–19:00<br><a href="https://wa.me/56953426548" target="_blank" rel="noopener">WhatsApp +56 9 5342 6548</a></p></div>
-      <div><h4>Contacto</h4><p><a href="https://wa.me/56999780334" target="_blank" rel="noopener">WhatsApp +56 9 9978 0334</a><br><a href="tel:+56572311235">Fijo (57) 231 1235</a><br><a href="https://www.instagram.com/donafilomenarestaurant/" target="_blank" rel="noopener">Instagram</a> · <a href="https://www.facebook.com/donafilomenarestaurant/" target="_blank" rel="noopener">Facebook</a><br><a href="https://menusonline.cl/filomena" target="_blank" rel="noopener">Carta completa (vinos y destilados)</a></p></div>
+      <div><h4>Contacto</h4><p><a href="https://wa.me/56999780334" target="_blank" rel="noopener">WhatsApp +56 9 9978 0334</a><br><a href="tel:+56572311235">Fijo (57) 231 1235</a><br><a href="https://www.instagram.com/donafilomenarestaurant/" target="_blank" rel="noopener">Instagram</a> · <a href="https://www.facebook.com/donafilomenarestaurant/" target="_blank" rel="noopener">Facebook</a><br><a href="assets/carta-dona-filomena.pdf" target="_blank" rel="noopener">Descargar carta (PDF)</a></p></div>
     </div>
   </div>
   <p class="ftr-bottom">© <span id="yr"></span> Doña Filomena · Hecho con cariño en Cavancha</p>

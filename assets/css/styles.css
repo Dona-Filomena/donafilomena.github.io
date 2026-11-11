@@ -10,13 +10,13 @@
   --ink:#2B1810;
   --ink-2:#5B3A25;
   --ink-3:#8A6448;
-  --red:#B4532F;
-  --red-2:#8E3D1F;
-  --terra:#C4613D;
-  --teal:#3F7376;
+  --red:#D3202E;
+  --red-2:#A5151F;
+  --terra:#C2202C;
+  --teal:#2F7436;
   --gold:#E1A43B;
   --gold-2:#F4CB6E;
-  --olive:#5E7A2E;
+  --olive:#2F7436;
   --wa:#168A47;
   --wa-2:#0F6E37;
   --line:rgba(43,24,16,.12);
@@ -351,11 +351,11 @@ h1 em,h2 em,h3 em{font-style:italic;font-weight:500;color:var(--red)}
 .price.q{font-size:13px;color:var(--ink-3);font-weight:700}
 
 .tag{display:inline-flex;align-items:center;white-space:nowrap;flex-shrink:0;padding:2px 8px;border-radius:999px;font-size:10.5px;font-weight:800;letter-spacing:.06em;text-transform:uppercase;line-height:1.6}
-.tag.popular{background:var(--gold-2);color:var(--ink)}
-.tag.premiada{background:var(--red);color:#fff}
-.tag.economica{background:#E3EBD0;color:#3F5419}
+.tag.pedido{background:#E0EDD9;color:#22592A}
+.tag.pedido::before{content:"";width:9px;height:9px;margin-right:5px;border-radius:0 60% 0 60%;background:currentColor}
+.tag.casa{background:var(--red);color:#fff}
+.tag.economica{background:var(--gold-2);color:var(--ink)}
 .tag.nuevo{background:var(--ink);color:var(--bg)}
-.tag.hh{background:#FBE0D3;color:var(--red-2)}
 
 /* add / stepper */
 .add{
@@ -508,7 +508,8 @@ h1 em,h2 em,h3 em{font-style:italic;font-weight:500;color:var(--red)}
 /* ---------- footer ---------- */
 .ftr{background:var(--ink);color:rgba(251,243,230,.7);padding:56px var(--gut) 110px;margin-top:clamp(24px,4vw,48px)}
 .ftr-top{max-width:var(--max);margin:0 auto;display:grid;gap:32px;padding-bottom:32px;border-bottom:1px solid rgba(251,243,230,.12)}
-.ftr-logo{width:200px;height:auto}
+.ftr-logo{width:150px;height:auto}
+.ftr .ftr-brand{font-family:var(--serif);font-style:italic;font-size:30px;font-weight:600;color:var(--bg);margin-top:10px;line-height:1.1}
 .ftr-sub{font-size:14px;margin-top:6px}
 .ftr-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:24px}
 .ftr h4{font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);margin-bottom:8px}
@@ -682,4 +683,18 @@ body.has-cart .wa-float{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 @media (min-width:900px){
   .gcard{grid-template-columns:auto 1fr auto}
   .gfacts{padding:0 clamp(16px,3vw,40px);border-left:1px solid var(--line);border-right:1px solid var(--line)}
+}
+
+/* carta en PDF + tortas por encargo */
+.pdf-link{display:inline-flex;align-items:center;gap:8px;height:54px;padding:0 20px;border-radius:999px;border:1.5px solid var(--line);background:var(--card);font-weight:700;font-size:14.5px;color:var(--ink-2);transition:border-color .2s,color .2s}
+.pdf-link:hover{border-color:var(--ink);color:var(--ink)}
+.pdf-link svg{width:18px;height:18px}
+.encargo{margin-top:20px;padding:14px 16px;border-radius:var(--r-m);background:var(--card);border:1px dashed var(--line);font-size:14px;line-height:1.5;color:var(--ink-2)}
+.encargo b{color:var(--ink)}
+.encargo a{display:inline-block;font-weight:800;color:var(--red);text-decoration:underline;white-space:nowrap}
+.exp .sec-head{max-width:860px}
+.exp .sec-head h2{font-size:clamp(30px,4.6vw,52px);line-height:1.1}
+@media (max-width:559px){
+  .carta-tools .search{order:3;flex-basis:100%;max-width:none}
+  .carta-tools .pdf-link{margin-left:auto;height:48px;padding:0 16px}
 }

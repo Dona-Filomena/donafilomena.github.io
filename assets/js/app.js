@@ -18,6 +18,7 @@
   const toMin = hm => { const [h, m] = hm.split(":").map(Number); return h * 60 + m; };
   const hm = min => { const m = ((min % 1440) + 1440) % 1440; return String(Math.floor(m / 60)).padStart(2, "0") + ":" + String(m % 60).padStart(2, "0"); };
   const disponibleEn = item => item.en || CAT[item.cat].en;
+  const nombreItem = it => { const pre = CAT[it.cat].pre; return pre && !norm(it.nm).startsWith(norm(pre).split(" ")[0]) && !/^hamburguesa/i.test(it.nm) ? `${pre} ${it.nm}` : it.nm; };
   const disponible = (item, local = state.local) => disponibleEn(item).includes(local);
 
   /* ---------- almacenamiento seguro ---------- */
@@ -70,16 +71,16 @@
     const d = toMin(HAPPY_HOUR.desde), h = toMin(HAPPY_HOUR.hasta);
     if (HAPPY_HOUR.dias.includes(day) && min >= d && min < h) {
       const r = h - min;
-      return { live: true, title: "Happy Hour activo ahora", sub: `Quedan ${r >= 60 ? Math.floor(r / 60) + " h " : ""}${r % 60} min · ${HAPPY_HOUR.texto}` };
+      return { live: true, title: "Happy Hour activo ahora", sub: `Quedan ${r >= 60 ? Math.floor(r / 60) + " h " : ""}${r % 60} min · ${HAPPY_HOUR.promo}` };
     }
     for (let i = 0; i <= 7; i++) {
       const dd = (day + i) % 7;
       if (!HAPPY_HOUR.dias.includes(dd)) continue;
       if (i === 0 && min >= d) continue;
       const cuando = i === 0 ? "hoy" : i === 1 ? "mañana" : "el " + DIAS[dd];
-      return { live: false, title: `Próximo Happy Hour: ${cuando} ${HAPPY_HOUR.desde}`, sub: HAPPY_HOUR.texto };
+      return { live: false, title: `Próximo Happy Hour: ${cuando} ${HAPPY_HOUR.desde}`, sub: `${HAPPY_HOUR.texto} · ${HAPPY_HOUR.promo}` };
     }
-    return { live: false, title: "Happy Hour", sub: HAPPY_HOUR.texto };
+    return { live: false, title: "Happy Hour", sub: `${HAPPY_HOUR.texto} · ${HAPPY_HOUR.promo}` };
   }
 
   /* ---------- controles + / stepper ---------- */
@@ -96,7 +97,7 @@
 
   const priceHTML = it => it.precio == null ? `<span class="price q">Consultar</span>` : `<span class="price">${fmt(it.precio)}</span>`;
   const tagsHTML = it => (it.tags || []).map(t => {
-    const lbl = { popular: "Popular", premiada: "Premiada", economica: "Económica", nuevo: "Nuevo", autor: "De autor" }[t] || t;
+    const lbl = { pedido: "Más pedido", casa: "De la casa", economica: "Promo", nuevo: "Nuevo" }[t] || t;
     return `<span class="tag ${t}">${lbl}</span>`;
   }).join("");
 
@@ -160,12 +161,12 @@
   }
 
   function renderFavs() {
-    const favs = MENU.filter(i => i.img && (i.tags || []).includes("popular") && disponible(i));
+    const favs = MENU.filter(i => i.img && (i.tags || []).some(t => t === "pedido" || t === "casa") && disponible(i));
     $("#favs").innerHTML = favs.map(i => `
       <article class="fcard">
         <div class="fcard-img"><img src="${i.img}" alt="${esc(i.nm)}" loading="lazy"><div class="tagrow">${tagsHTML(i)}</div></div>
         <div class="fcard-body">
-          <h4>${esc(i.nm)}</h4>
+          <h4>${esc(nombreItem(i))}</h4>
           <p>${esc(i.desc || CAT[i.cat].nombre)}</p>
           <div class="fcard-foot">${priceHTML(i)}<span data-ctl="${i.id}">${control(i.id)}</span></div>
         </div>
@@ -210,7 +211,7 @@
     const list = (cat, n) => MENU.filter(i => i.cat === cat).slice(0, n).map(i => `
       <li><span class="ln">${esc(i.nm)}${i.desc ? `<small>${esc(i.desc)}</small>` : ""}</span><span class="fill"></span>${priceHTML(i)}<span data-ctl="${i.id}">${control(i.id)}</span></li>`).join("");
     $("#listaPostres").innerHTML = list("postres", 6);
-    $("#listaTragos").innerHTML = ["mj1", "ct1", "mj2", "so1", "ct2", "ct3"].map(id => ITEM[id]).filter(Boolean).map(i => `
+    $("#listaTragos").innerHTML = ["ct1", "so7", "mj2", "so1", "ct3", "ct8"].map(id => ITEM[id]).filter(Boolean).map(i => `
       <li><span class="ln">${esc(i.nm)}${i.desc ? `<small>${esc(i.desc)}</small>` : ""}</span><span class="fill"></span>${priceHTML(i)}<span data-ctl="${i.id}">${control(i.id)}</span></li>`).join("");
   }
 
@@ -234,7 +235,8 @@
     $("#gLeer").href = "https://search.google.com/local/reviews?placeid=" + g.placeId;
     $("#gEscribir").href = "https://search.google.com/local/writereview?placeid=" + g.placeId;
 
-    $("#revTrack").hidden = $("#revNav").hidden = !RESENAS.length;
+    $("#revTrack").hidden = !RESENAS.length;
+    $("#revNav").hidden = RESENAS.length <= 3;
     $("#revTrack").innerHTML = RESENAS.map(r => `
       <article class="rev">
         <div class="stars" aria-label="${r.estrellas || 5} estrellas">${"★".repeat(r.estrellas || 5)}</div>
@@ -320,7 +322,7 @@
     if (!it) return;
     if (!disponible(it)) { toast(`${it.nm} no está en ${LOCALES[state.local].corto}`); return; }
     setQty(id, (state.cart[id] || 0) + 1);
-    toast(`Agregado: ${it.nm}`);
+    toast(`Agregado: ${nombreItem(it)}`);
     const b = $("#cartBtn"); b.classList.remove("bump"); void b.offsetWidth; b.classList.add("bump");
   }
 
@@ -336,7 +338,7 @@
     $("#cartItems").innerHTML = L.length ? L.map(({ it, q }) => `
       <div class="ci">
         <div class="ci-info">
-          <div class="ci-name">${esc(it.nm)}</div>
+          <div class="ci-name">${esc(nombreItem(it))}</div>
           <div class="ci-sub">${it.precio == null ? "Precio a confirmar" : fmt(it.precio * q)}${q > 1 && it.precio ? ` · ${fmt(it.precio)} c/u` : ""}</div>
           ${disponible(it) ? "" : `<div class="ci-warn">No disponible en ${loc.corto}</div>`}
         </div>
@@ -385,7 +387,7 @@
     const L = lineas(), loc = LOCALES[state.local];
     if (!L.length) { toast("Tu pedido está vacío"); return; }
     const fuera = L.filter(l => !disponible(l.it));
-    if (fuera.length) { toast(`Quita lo que no está en ${loc.corto}: ${fuera.map(f => f.it.nm).join(", ")}`); return; }
+    if (fuera.length) { toast(`Quita lo que no está en ${loc.corto}: ${fuera.map(f => nombreItem(f.it)).join(", ")}`); return; }
     const nombre = $("#fNombre").value.trim(), dir = $("#fDir").value.trim(), nota = $("#fNota").value.trim();
     const pago = ($('input[name="pago"]:checked') || {}).value || "Efectivo";
     if (!nombre) return marcarError($("#fNombre"), "Escribe tu nombre");
@@ -394,7 +396,7 @@
 
     const t = subtotal(), pend = L.filter(l => l.it.precio == null).length;
     let m = `¡Hola ${loc.nombre}! 👋 Quiero hacer un pedido:\n\n`;
-    L.forEach(({ it, q }) => { m += `• ${q} × ${it.nm} — ${it.precio == null ? "precio a confirmar" : fmt(it.precio * q)}\n`; });
+    L.forEach(({ it, q }) => { m += `• ${q} × ${nombreItem(it)} — ${it.precio == null ? "precio a confirmar" : fmt(it.precio * q)}\n`; });
     m += `\n*Total estimado: ${fmt(t)}*${pend ? " (+ precios a confirmar)" : ""}\n\n`;
     m += `*Entrega:* ${state.modo === "delivery" ? "Delivery 🛵" : "Retiro en local 🛍️"}\n`;
     if (state.modo === "delivery") m += `*Dirección:* ${dir}\n`;
@@ -514,6 +516,7 @@
   if (cli.dir) $("#fDir").value = cli.dir;
   $("#yr").textContent = new Date().getFullYear();
 
+  $("#statCarta").textContent = "+" + Math.floor(MENU.length / 10) * 10;
   renderLocales();
   renderCompare();
   renderReviews();
