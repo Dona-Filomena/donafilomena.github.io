@@ -146,7 +146,7 @@ const MENU = [
   { id: "eh10", cat: "horno", nm: "Loco Queso",                 precio: 4900 },
 
   /* ---------- LAS SIN ENVIDIA ---------- */
-  { id: "se0", cat: "sinenvidia", nm: "Promo 6 unidades",  precio: 11000, tags: ["economica"], img: "assets/img/empanadas.webp", desc: "Mechada queso, ají de gallina, pastel de choclo, pollo queso, pino y queso" },
+  { id: "se0", cat: "sinenvidia", nm: "Promo 6 unidades",  precio: 11000, tags: ["economica"], desc: "Mechada queso, ají de gallina, pastel de choclo, pollo queso, pino y queso" },
   { id: "se7", cat: "sinenvidia", nm: "Promo 12 unidades", precio: 22500, tags: ["economica"] },
   { id: "se1", cat: "sinenvidia", nm: "Sin Envidia Pino",             precio: 2000 },
   { id: "se2", cat: "sinenvidia", nm: "Sin Envidia Mechada Queso",    precio: 2000 },
@@ -156,7 +156,7 @@ const MENU = [
   { id: "se6", cat: "sinenvidia", nm: "Sin Envidia Queso",            precio: 2000 },
 
   /* ---------- PIZZAS FAMILIARES ---------- */
-  { id: "pz2",  cat: "pizzas", nm: "Azapa",           precio: 19900, tags: ["pedido"], img: "assets/img/pizza.webp", desc: "Tomate, aceitunas de Azapa, queso de cabra, albahaca y orégano" },
+  { id: "pz2",  cat: "pizzas", nm: "Azapa",           precio: 19900, tags: ["pedido"], desc: "Tomate, aceitunas de Azapa, queso de cabra, albahaca y orégano" },
   { id: "pz6",  cat: "pizzas", nm: "Del Norte",       precio: 19900, tags: ["pedido"], desc: "Chorizo español, tocino, carne, aceitunas de Azapa y orégano" },
   { id: "pz15", cat: "pizzas", nm: "Napolitana",      precio: 18900, tags: ["pedido"], desc: "Tomate, queso, jamón cocido y aceituna" },
   { id: "pz1",  cat: "pizzas", nm: "Cavanchina",      precio: 19900, desc: "Tomate, camarón, parmesano, rúcula y orégano" },
@@ -280,7 +280,7 @@ const MENU = [
   /* ---------- DE LA TIERRA + PARRILLADAS ---------- */
   { id: "cr8",  cat: "carnes", nm: "Lomo Vetado",               precio: 16900, tags: ["pedido"], desc: "Con una guarnición a elección" },
   { id: "cr13", cat: "carnes", nm: "Pollo Grillé",              precio: 16000, tags: ["pedido"] },
-  { id: "cr5",  cat: "carnes", nm: "Lomo Salteado",             precio: 20000, tags: ["pedido"], img: "assets/img/platos/lomo-salteado.webp" },
+  { id: "cr5",  cat: "carnes", nm: "Lomo Salteado",             precio: 20000, tags: ["pedido"] },
   { id: "cr3",  cat: "carnes", nm: "Lomo Vetado a lo Pobre",    precio: 22000 },
   { id: "cr7",  cat: "carnes", nm: "Lomo Vetado a lo Rico",     precio: 18000, desc: "Con tocino ahumado y hojas verdes" },
   { id: "cr21", cat: "carnes", nm: "Lomo Vetado Doña Filomena", precio: 19900 },
@@ -299,10 +299,10 @@ const MENU = [
   { id: "cr15", cat: "carnes", nm: "Milanesa de Carne o de Pollo", precio: 17000 },
   { id: "cr14", cat: "carnes", nm: "Escalopa Kayser de Carne o de Pollo", precio: 18000 },
   { id: "cr25", cat: "carnes", nm: "Bajo en Calorías de Pollo", precio: 18000 },
-  { id: "cr17", cat: "carnes", nm: "Parrillada para 2",         precio: 54900, img: "assets/img/platos/parrillada.webp" },
+  { id: "cr17", cat: "carnes", nm: "Parrillada para 2",         precio: 54900 },
   { id: "cr18", cat: "carnes", nm: "Parrillada para 3",         precio: 65900 },
   { id: "cr19", cat: "carnes", nm: "Parrillada para 4",         precio: 82500 },
-  { id: "cr20", cat: "carnes", nm: "Parrillada Premium",        precio: 88000, desc: "Incluye 2 agregados y papas cocidas" },
+  { id: "cr20", cat: "carnes", nm: "Parrillada Premium",        precio: 88000, img: "assets/img/platos/parrillada.webp", desc: "Incluye 2 agregados y papas cocidas" },
 
   /* ---------- ENSALADAS Y AGREGADOS ---------- */
   { id: "en5",  cat: "ensaladas", nm: "César Valenzuela",     precio: 10000, tags: ["pedido"], desc: "Salsa césar, pollo grillé, crutones y parmesano" },
@@ -362,7 +362,7 @@ const MENU = [
   { id: "cf11", cat: "cafe", nm: "Nescafé chico",    precio: 2200 },
 
   /* ---------- JUGOS Y BEBIDAS ---------- */
-  { id: "b1",  cat: "jugos", nm: "Jugo de Mango",              precio: 4200, tags: ["pedido"], img: "assets/img/jugo.webp" },
+  { id: "b1",  cat: "jugos", nm: "Jugo de Mango",              precio: 4200, tags: ["pedido"] },
   { id: "b5",  cat: "jugos", nm: "Limonada Menta Jengibre",    precio: 4200, tags: ["pedido"] },
   { id: "b17", cat: "jugos", nm: "Jugo de Maracuyá",           precio: 4200 },
   { id: "b13", cat: "jugos", nm: "Tres Marías",                precio: 4200, desc: "Manzana, mango y maracuyá" },
