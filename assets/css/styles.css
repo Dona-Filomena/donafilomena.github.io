@@ -496,7 +496,7 @@ body.has-cart .wa-float{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 .scrim{position:fixed;inset:0;z-index:300;background:rgba(30,15,8,.5);opacity:0;pointer-events:none;transition:opacity .35s;backdrop-filter:blur(2px)}
 .scrim.on{opacity:1;pointer-events:auto}
 .drawer{
-  position:fixed;z-index:301;left:0;right:0;bottom:0;max-height:92dvh;
+  position:fixed;z-index:301;left:0;right:0;bottom:0;max-height:92vh;max-height:92dvh;
   display:flex;flex-direction:column;background:var(--bg);border-radius:var(--r-xl) var(--r-xl) 0 0;
   box-shadow:0 -20px 60px rgba(30,15,8,.3);transform:translateY(105%);visibility:hidden;transition:transform .45s var(--ease),visibility 0s .45s;
 }
@@ -656,3 +656,12 @@ body.has-cart .wa-float{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 .resumen .pend dd{color:var(--red);font-weight:700}
 .field.err .choice span{border-color:var(--red);animation:shake .4s}
 .inline-link{font-weight:700;color:var(--red);text-decoration:underline;white-space:nowrap}
+
+/* pantallas muy angostas (320 px) */
+.ig-head > *{min-width:0}
+.ig-acc b{display:block;white-space:nowrap}
+@media (max-width:360px){
+  .ig-acc{padding:10px 10px 10px 12px;gap:10px}
+  .ig-acc b{font-size:13px}
+  .ig-acc em{padding:7px 12px;font-size:12.5px}
+}

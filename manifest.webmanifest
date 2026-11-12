@@ -1,0 +1,23 @@
+{
+ "name": "Doña Filomena · Iquique",
+ "short_name": "Doña Filomena",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "background_color": "#FBF3E6",
+ "theme_color": "#FBF3E6",
+ "lang": "es-CL",
+ "icons": [
+  {
+   "src": "icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "any maskable"
+  }
+ ]
+}
