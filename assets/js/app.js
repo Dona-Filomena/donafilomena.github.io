@@ -114,7 +114,7 @@
         : `<div class="loc-ph"><span>${esc(l.corto)}<small>${esc(l.direccion)}</small></span></div>`;
       const pedir = l === LOCAL
         ? `<a class="btn btn-primary" href="#carta">Hacer mi pedido</a>`
-        : `<a class="btn btn-wa" href="${waLink(l.whatsapp, `Hola, quiero hacer un pedido en ${l.nombre}`)}" target="_blank" rel="noopener">${ICON_WA}Pedir por WhatsApp</a>`;
+        : `<a class="btn btn-wa" href="${waLink(l.whatsapp, `Hola, quiero hacer un pedido para retirar en ${l.nombre}`)}" target="_blank" rel="noopener">${ICON_WA}Pedir para retiro</a>`;
       return `<article class="loc">
         <div class="loc-img">${img}
           <span class="loc-status"><span class="dot ${e.open ? "open" : "closed"}"></span>${e.txt}</span>
@@ -240,12 +240,12 @@
     if (fr.dataset.src !== l.mapsEmbed) { fr.dataset.src = l.mapsEmbed; fr.src = l.mapsEmbed; fr.title = "Mapa " + l.nombre; }
     $("#ubicInfo").innerHTML = `
       <div class="info-card"><h4>Dirección</h4><p class="big">${esc(l.direccion)}</p><p>${esc(l.zona)}</p></div>
-      <div class="info-card"><h4>Pedidos y contacto</h4><p>WhatsApp ${esc(l.telefono)}${l.fijo ? `<br>Teléfono fijo ${esc(l.fijo)}` : ""}</p></div>
+      <div class="info-card"><h4>Pedidos y contacto</h4><p>WhatsApp ${esc(l.telefono)}${l.llamadas ? `<br>Llamadas ${l.llamadas.map(esc).join(" · ")}` : ""}${l.fijo ? `<br>Teléfono fijo ${esc(l.fijo)}` : ""}</p></div>
       <div class="info-card"><h4>Horario</h4><p style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span class="dot ${e.open ? "open" : "closed"}"></span>${e.txt}</p>
         ${l.horarioTexto.map(([d, h]) => `<p>${d}: ${h}</p>`).join("")}</div>
       <div class="info-actions">
         <a class="btn btn-wa" href="${waLink(l.whatsapp)}" target="_blank" rel="noopener">${ICON_WA}WhatsApp</a>
-        <a class="btn btn-ghost" href="tel:${l.telefono.replace(/\s/g, "")}">Llamar</a>
+        <a class="btn btn-ghost" href="tel:${(l.llamadas ? l.llamadas[0] : l.telefono).replace(/\s/g, "")}">Llamar</a>
         <a class="btn btn-ghost" href="${l.maps}" target="_blank" rel="noopener">Cómo llegar</a>
       </div>`;
   }
@@ -269,7 +269,7 @@
     if (CARGOS.cajaPizza && pizzas) out.push({ nm: `Caja de pizza × ${pizzas}`, monto: CARGOS.cajaPizza * pizzas });
     if (state.modo === "delivery") {
       if (state.zona === "peninsula") out.push({ nm: "Delivery en Península", monto: 0 });
-      else if (state.zona === "otro") out.push({ nm: "Delivery fuera de Península", monto: CARGOS.deliveryFuera });
+      else if (state.zona === "otro") out.push({ nm: "Delivery resto de Iquique", monto: CARGOS.deliveryFuera });
       else out.push({ nm: "Delivery", monto: null });
     }
     return out;
@@ -327,7 +327,7 @@
     $("#zonaField").hidden = $("#dirField").hidden = state.modo !== "delivery";
     $("#zonaChoice").innerHTML =
       radio("zona", "peninsula", state.zona === "peninsula", "Península · Gratis") +
-      radio("zona", "otro", state.zona === "otro", `Otro sector · ${fmt(CARGOS.deliveryFuera)}`);
+      radio("zona", "otro", state.zona === "otro", `Resto de Iquique · ${fmt(CARGOS.deliveryFuera)}`);
     $("#checkout").hidden = !L.length;
 
     const pendientes = L.filter(l => l.it.precio == null).length;
@@ -374,7 +374,7 @@
     m += `\nProductos: ${fmt(subtotal())}\n`;
     cargos().forEach(c => { m += `${c.nm}: ${c.monto === 0 ? "gratis" : fmt(c.monto)}\n`; });
     m += `*Total estimado: ${fmt(total())}*${pend ? " (+ precios a confirmar)" : ""}\n\n`;
-    m += `*Entrega:* ${delivery ? `Delivery 🛵 (${state.zona === "peninsula" ? "Península" : "fuera de Península"})` : "Retiro en local 🛍️"}\n`;
+    m += `*Entrega:* ${delivery ? `Delivery 🛵 (${state.zona === "peninsula" ? "Península" : "resto de Iquique"})` : "Retiro en local 🛍️"}\n`;
     if (delivery) m += `*Dirección:* ${dir}\n`;
     m += `*Nombre:* ${nombre}\n*Pago:* ${pago}\n`;
     if (nota) m += `*Comentarios:* ${nota}\n`;
