@@ -26,6 +26,7 @@ const LOCALES = {
     zona: "Península de Iquique",
     whatsapp: "56999780334",
     telefono: "+56 9 9978 0334",
+    llamadas: ["+56 9 7871 8675", "+56 9 9978 0334"],   // teléfonos para pedidos por llamada
     fijo: "(57) 231 1235",
     instagram: "donafilomenarestaurant",
     maps: "https://maps.app.goo.gl/HCWu1sZ8AzGHnCcf6",
@@ -38,14 +39,14 @@ const LOCALES = {
     },
     horarioTexto: [["Dom – Jue", "12:00 – 00:00"], ["Vie – Sáb", "12:00 – 01:00"]],
     entrega: ["delivery", "retiro"],
-    notaDelivery: "Delivery gratis en Península · otros sectores $3.500",
+    notaDelivery: "Delivery gratis en Península · resto de Iquique $3.500",
     destacados: ["Terraza con música en vivo", "Zona infantil (ticket $3.000)", "Bar y Happy Hour", "Menú del día Lun–Jue", "Delivery gratis en Península"]
   },
   zofri: {
     id: "zofri",
     corto: "Zofri",
     nombre: "Doña Filomena Zofri",
-    tipo: "En Mall Zofri",
+    tipo: "En Mall Zofri · Pedidos para retiro",
     direccion: "Mall Zofri, Etapa 7",
     zona: "Zona Franca, Iquique",
     whatsapp: "56953426548",
@@ -59,7 +60,7 @@ const LOCALES = {
       4: ["11:00", "19:00"], 5: ["11:00", "19:00"], 6: ["11:00", "19:00"]
     },
     horarioTexto: [["Lun – Sáb", "11:00 – 19:00"], ["Domingo", "Cerrado"]],
-    destacados: ["Ideal para tu día de compras", "Pedidos y consultas por WhatsApp"]
+    destacados: ["¿Trabajas en Zofri? Pide por WhatsApp y retira sin esperar", "Ideal para tu colación o tu día de compras"]
   }
 };
 
@@ -71,10 +72,10 @@ const HAPPY_HOUR = {
 };
 
 /* Cargos que se suman al pedido para llevar o con delivery (Península).
-   - empaque: una vez por pedido que lleve algo distinto de pizza
+   - empaque: 0 = no se cobra en la web (solo en el restorán, a quien se lleva lo que le sobró)
    - cajaPizza: por cada pizza
-   - deliveryFuera: despacho fuera de Península (dentro es gratis) */
-const CARGOS = { empaque: 500, cajaPizza: 500, deliveryFuera: 3500 };
+   - deliveryFuera: despacho al resto de Iquique (en Península es gratis) */
+const CARGOS = { empaque: 0, cajaPizza: 500, deliveryFuera: 3500 };
 
 const CATEGORIAS = [
   { id: "ejecutivo", nombre: "Menú del día",        sub: "Lunes a jueves · 12:00 a 16:00" },
@@ -105,7 +106,7 @@ const CATEGORIAS = [
 
 const MENU = [
   /* ---------- MENÚ DEL DÍA ---------- */
-  { id: "me1", cat: "ejecutivo", nm: "Menú del día", precio: 14900, tags: ["pedido"], desc: "Entrada (empanada Sin Envidia o consomé de ave) + fondo (plateada al jugo, salteado de pollo, fetuccini o corvinilla) + bebestible + postre del día. Las opciones pueden cambiar: pregunta por el menú de hoy." },
+  { id: "me1", cat: "ejecutivo", nm: "Menú del día", precio: 14900, tags: ["pedido"], desc: "Entrada: empanada Sin Envidia al horno o consomé de ave. Fondo: plateada al jugo, salteado de pollo, fetuccini al pesto o boloñesa, o corvinilla a la plancha o frita. Bebestible: limonada o Sprite zero. Postre del día." },
 
   /* ---------- EMPANADAS FRITAS ---------- */
   { id: "ef1",  cat: "fritas", nm: "Camarón Queso",        precio: 4500, tags: ["pedido"], desc: "La frita más pedida" },
@@ -523,6 +524,6 @@ const INSTAGRAM_POSTS = [
   { img: "assets/img/platos/jardin-del-mar.webp", alt: "Tabla Jardín del Mar", url: IG },
   { img: "assets/img/platos/postre-y-jugo.webp", alt: "Postre de la casa con jugo natural", url: IG },
   { img: "assets/img/platos/filomena-pasion.webp", alt: "Cóctel de la casa Filomena Pasión", url: IG },
-  { img: "assets/img/ig-5.webp", alt: "Promo pizza familiar con bebida gratis", url: IG },
+  { img: "assets/img/platos/sangria.webp", alt: "Sangría de la casa", url: IG },
   { img: "assets/img/platos/coctel-rosado.webp", alt: "Coctelería de la barra", url: IG }
 ];
