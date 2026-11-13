@@ -377,7 +377,7 @@ const MENU = [
   { id: "b11", cat: "jugos", nm: "Red Bull",                   precio: 2800, img: "assets/img/platos/red-bull.webp", desc: "Normal, sandía o yellow" },
 
   /* ---------- JARRAS 1,5 L ---------- */
-  { id: "j3",  cat: "jarras", nm: "Jarra Limonada Menta Jengibre", precio: 16000, tags: ["pedido"], img: "assets/img/platos/jarra-limonada.webp" },
+  { id: "j3",  cat: "jarras", nm: "Jarra Limonada Menta Jengibre", precio: 16000, tags: ["pedido"] },
   { id: "j13", cat: "jarras", nm: "Jarra Limonada",            precio: 15500 },
   { id: "j1",  cat: "jarras", nm: "Jarra de Jugo Natural",     precio: 16500, img: "assets/img/platos/jarra-jugo.webp", desc: "Piña, maracuyá, Tres Marías, sandía o frutilla" },
   { id: "j2",  cat: "jarras", nm: "Jarra de Mango",            precio: 17000, desc: "Jugo natural de mango de Pica" },
