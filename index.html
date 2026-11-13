@@ -23,7 +23,7 @@
 <meta property="og:locale" content="es_CL">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..800;1,9..144,400..700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..800;1,9..144,400..700&family=Oswald:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/styles.css">
 <script type="application/ld+json">
 [{
@@ -97,9 +97,16 @@
 
 <!-- HERO -->
 <section class="hero" id="inicio">
-  <div class="hero-copy">
+  <div class="hero-bg" id="heroBg" aria-hidden="true">
+    <img class="on" src="assets/img/platos/empanadas-horno.webp" alt="" width="1000" height="667" fetchpriority="high">
+    <img src="assets/img/platos/jardin-del-mar.webp" alt="" width="750" height="1000" loading="lazy">
+    <img src="assets/img/pizza.webp" alt="" width="646" height="428" loading="lazy">
+    <img src="assets/img/platos/barra-mojito-michelada.webp" alt="" width="800" height="1000" loading="lazy">
+  </div>
+  <div class="hero-inner" id="heroArt">
+    <div class="hero-copy">
     <p class="eyebrow"><span class="dot" id="heroDot"></span><span id="heroStatus">Cocina nortina · Iquique</span></p>
-    <h1>La empanada<br>que <em>conquistó</em><br>Iquique.</h1>
+    <h1><span>La empanada</span><span>que <em>conquistó</em></span><span>Iquique</span></h1>
     <p class="lead">Empanadas premiadas, pizzas a la piedra, pescados del Pacífico y una barra que no perdona. Arma tu pedido aquí y te llega directo por WhatsApp.</p>
     <div class="hero-ctas">
       <a href="#carta" class="btn btn-primary">Hacer mi pedido
@@ -113,11 +120,6 @@
       <li><b>+20</b><span>años de historia</span></li>
     </ul>
   </div>
-
-  <div class="hero-art" id="heroArt" aria-hidden="true">
-    <figure class="ph ph-1" data-depth="18"><img src="assets/img/terraza.webp" alt="" width="867" height="580"></figure>
-    <figure class="ph ph-2" data-depth="34"><img src="assets/img/platos/empanadas-horno.webp" alt="" width="1000" height="667"><figcaption>Recién horneadas</figcaption></figure>
-    <figure class="ph ph-3" data-depth="26"><img src="assets/img/platos/filomena-pasion.webp" alt="" width="450" height="1000"></figure>
     <div class="seal" data-depth="44">
       <svg viewBox="0 0 200 200">
         <defs><path id="circ" d="M100,100 m-74,0 a74,74 0 1,1 148,0 a74,74 0 1,1 -148,0"/></defs>
@@ -127,6 +129,7 @@
       <span class="seal-core">🏆</span>
     </div>
   </div>
+  <a class="hero-scroll" href="#carta" aria-label="Ver la carta"><span></span></a>
 </section>
 
 <!-- LOCALES -->
