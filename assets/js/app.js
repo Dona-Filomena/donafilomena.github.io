@@ -484,7 +484,8 @@
   $("#revNext").addEventListener("click", () => rv(1));
 
   // header
-  const onScroll = () => $("#hdr").classList.toggle("scrolled", scrollY > 10);
+  const onScroll = () => { $("#hdr").classList.toggle("scrolled", scrollY > 10); document.body.classList.toggle("past-hero", scrollY > innerHeight * .6); };
+  onScroll();
   addEventListener("scroll", onScroll, { passive: true });
 
   // parallax del hero (solo mouse)
@@ -516,6 +517,18 @@
   if (cli.nombre) $("#fNombre").value = cli.nombre;
   if (cli.dir) $("#fDir").value = cli.dir;
   $("#yr").textContent = new Date().getFullYear();
+  // portada: fotos que se van alternando
+  const slides = $$("#heroBg img");
+  if (slides.length > 1 && !reduceMotion) {
+    let si = 0;
+    setInterval(() => {
+      if (document.hidden) return;
+      slides[si].classList.toggle("on", false);
+      si = (si + 1) % slides.length;
+      slides[si].classList.toggle("on", true);
+    }, 5200);
+  }
+
   $("#statCarta").textContent = "+" + Math.floor(MENU.length / 10) * 10;
   $("#waFloat").href = waLink(LOCAL.whatsapp);
 
