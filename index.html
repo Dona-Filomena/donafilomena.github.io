@@ -184,7 +184,7 @@
   </article>
 
   <article class="dulce-card barra">
-    <div class="dulce-img"><img src="assets/img/platos/tinto-cavancha.webp" alt="Cóctel Tinto Cavancha en la barra de Doña Filomena" loading="lazy" width="750" height="1000"></div>
+    <div class="dulce-img"><img src="assets/img/platos/barra-mojito-michelada.webp" alt="Mojito de sabores y michelada en la barra de Doña Filomena" loading="lazy" width="800" height="1000"></div>
     <div class="dulce-body">
       <p class="kicker">Barra Filomena · Península</p>
       <h2>Mojitos, sours y cócteles <em>de autor</em></h2>
@@ -383,6 +383,22 @@
     </button>
   </div>
 </aside>
+
+<!-- foto ampliada de un producto -->
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-labelledby="lbName" aria-hidden="true">
+  <div class="lb-card">
+    <button class="lb-x" id="lbClose" data-close-foto aria-label="Cerrar foto">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></svg>
+    </button>
+    <div class="lb-pic"><img id="lbImg" src="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==" alt=""></div>
+    <div class="lb-body">
+      <div class="tagrow" id="lbTags"></div>
+      <h3 id="lbName"></h3>
+      <p id="lbDesc"></p>
+      <div class="lb-foot" id="lbFoot"></div>
+    </div>
+  </div>
+</div>
 
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 

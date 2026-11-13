@@ -150,7 +150,7 @@
     const favs = MENU.filter(i => i.img && (i.tags || []).some(t => t === "pedido" || t === "casa"));
     $("#favs").innerHTML = favs.map(i => `
       <article class="fcard">
-        <div class="fcard-img"><img src="${i.img}" alt="${esc(i.nm)}" loading="lazy"><div class="tagrow">${tagsHTML(i)}</div></div>
+        <button class="fcard-img" data-foto="${i.id}" aria-label="Ver foto de ${esc(nombreItem(i))}"><img src="${i.img}" alt="${esc(nombreItem(i))}" loading="lazy"><span class="tagrow">${tagsHTML(i)}</span></button>
         <div class="fcard-body">
           <h4>${esc(nombreItem(i))}</h4>
           <p>${esc(i.desc || CAT[i.cat].nombre)}</p>
@@ -172,7 +172,7 @@
         <h3 class="cat-title">${esc(c.nombre)}</h3>
         <p class="cat-sub">${esc(c.sub)}</p>
         <div class="mgrid">${items.map(i => `<div class="item ${i.img ? "has-img" : ""}">
-            ${i.img ? `<img class="item-img" src="${i.img}" alt="" loading="lazy" width="64" height="64">` : ""}
+            ${i.img ? `<button class="item-pic" data-foto="${i.id}" aria-label="Ver foto de ${esc(nombreItem(i))}"><img class="item-img" src="${i.img}" alt="" loading="lazy" width="64" height="64"></button>` : ""}
             <div class="item-info">
               <div class="item-name">${esc(i.nm)} ${tagsHTML(i)}</div>
               ${i.desc ? `<div class="item-desc">${esc(i.desc)}</div>` : ""}
@@ -400,6 +400,32 @@
 
   /* ---------- toast ---------- */
   let tt;
+  /* ---------- foto ampliada ---------- */
+  let fotoPrev = null;
+  function openFoto(id) {
+    const it = ITEM[id];
+    if (!it || !it.img) return;
+    fotoPrev = document.activeElement;
+    const img = $("#lbImg");
+    img.src = it.img; img.alt = nombreItem(it);
+    $("#lbTags").innerHTML = tagsHTML(it);
+    $("#lbName").textContent = nombreItem(it);
+    $("#lbDesc").textContent = it.desc || CAT[it.cat].nombre;
+    $("#lbFoot").innerHTML = `${priceHTML(it)}<span data-ctl="${it.id}">${control(it.id)}</span>`;
+    $("#lb").classList.add("on");
+    $("#lb").setAttribute("aria-hidden", "false");
+    document.documentElement.style.overflow = "hidden";
+    setTimeout(() => $("#lbClose").focus(), 60);
+  }
+  function closeFoto() {
+    if (!$("#lb").classList.contains("on")) return;
+    $("#lb").classList.remove("on");
+    $("#lb").setAttribute("aria-hidden", "true");
+    if (!$("#drawer").classList.contains("on")) document.documentElement.style.overflow = "";
+    if (fotoPrev && fotoPrev.isConnected) fotoPrev.focus({ preventScroll: true });
+    fotoPrev = null;
+  }
+
   function toast(msg) {
     const t = $("#toast"); t.textContent = msg; t.classList.add("on");
     clearTimeout(tt); tt = setTimeout(() => t.classList.remove("on"), 2200);
@@ -413,6 +439,8 @@
     if (d.add) { e.preventDefault(); add(d.add); }
     else if (d.inc) { setQty(d.inc, (state.cart[d.inc] || 0) + 1); }
     else if (d.dec) { setQty(d.dec, (state.cart[d.dec] || 0) - 1); }
+    else if (d.foto) { openFoto(d.foto); }
+    else if ("closeFoto" in d) { closeFoto(); }
     else if (d.tab) { irACat(d.tab); }
     else if (d.gotoCat) { e.preventDefault(); irACat(d.gotoCat); }
     else if (t.closest("#ubicTabs") && d.local) { renderUbic(d.local); }
@@ -428,7 +456,11 @@
   $("#checkout").addEventListener("submit", e => { e.preventDefault(); enviarWA(); });
   $("#modoChoice").addEventListener("change", e => { state.modo = e.target.value; renderCart(); });
   $("#zonaChoice").addEventListener("change", e => { state.zona = e.target.value; renderCart(); });
-  document.addEventListener("keydown", e => { if (e.key === "Escape") { closeCart(); toggleNav(false); } });
+  $("#lb").addEventListener("click", e => { if (e.target.id === "lb") closeFoto(); });
+  document.addEventListener("keydown", e => {
+    if (e.key !== "Escape") return;
+    if ($("#lb").classList.contains("on")) closeFoto(); else { closeCart(); toggleNav(false); }
+  });
 
   let qT;
   $("#q").addEventListener("input", e => {
