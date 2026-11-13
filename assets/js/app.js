@@ -214,6 +214,7 @@
     $("#gEscribir").href = "https://search.google.com/local/writereview?placeid=" + g.placeId;
 
     $("#revTrack").hidden = !RESENAS.length;
+    $("#revTrack").classList.toggle("few", RESENAS.length <= 3);
     $("#revNav").hidden = RESENAS.length <= 3;
     $("#revTrack").innerHTML = RESENAS.map(r => `
       <article class="rev">
@@ -330,9 +331,11 @@
     $("#checkout").hidden = !L.length;
 
     const pendientes = L.filter(l => l.it.precio == null).length;
+    const est = estado(LOCAL);
     $("#totalNote").textContent = !L.length ? "" :
       (pendientes ? `+ ${pendientes} producto${pendientes > 1 ? "s" : ""} con precio a confirmar. ` : "") +
-      "El local confirma el total y el tiempo.";
+      (est.open ? "El local confirma el total y el tiempo." : `${est.txt}: puedes enviarlo igual y te respondemos al abrir.`);
+    $("#totalNote").classList.toggle("closed", L.length > 0 && !est.open);
     $("#sendWa").disabled = !L.length;
   }
 
