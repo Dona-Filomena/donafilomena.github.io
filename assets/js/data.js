@@ -54,7 +54,8 @@ const LOCALES = {
     instagram: "donafilomenazofri",
     maps: "https://maps.google.com/?q=Mall%20Zofri%20Etapa%207%20Iquique",
     mapsEmbed: "https://www.google.com/maps?q=Mall%20Zofri%20Etapa%207%2C%20Iquique&output=embed",
-    foto: null,                          // ← falta foto del local Zofri
+    foto: "assets/img/zofri.webp",
+    fotoPos: "center 45%",              // encuadre de la foto
     horario: {
       0: null, 1: ["11:00", "19:00"], 2: ["11:00", "19:00"], 3: ["11:00", "19:00"],
       4: ["11:00", "19:00"], 5: ["11:00", "19:00"], 6: ["11:00", "19:00"]
@@ -225,8 +226,8 @@ const MENU = [
 
   /* ---------- CEVICHES ---------- */
   { id: "cv2",  cat: "ceviches", nm: "Ceviche Peruano",                 precio: 17900, tags: ["pedido"], desc: "Dorado fresco marinado en limón sutil y leche de tigre, con cebolla morada y chicharrón de pescado" },
-  { id: "cv8r", cat: "ceviches", nm: "Ceviche a lo Rico · reineta",     precio: 17900, tags: ["pedido"], desc: "Pescado, pulpo, camarones, cilantro, apio, queso de cabra y cebolla morada" },
-  { id: "cv8",  cat: "ceviches", nm: "Ceviche a lo Rico · corvinilla",  precio: 16900, desc: "Pescado, pulpo, camarones, cilantro, apio, queso de cabra y cebolla morada" },
+  { id: "cv8r", cat: "ceviches", nm: "Ceviche a lo Rico · reineta",     precio: 17900, tags: ["pedido"], img: "assets/img/platos/ceviche-a-lo-rico.webp", desc: "Pescado, pulpo, camarones, cilantro, apio, queso de cabra y cebolla morada" },
+  { id: "cv8",  cat: "ceviches", nm: "Ceviche a lo Rico · corvinilla",  precio: 16900, img: "assets/img/platos/ceviche-a-lo-rico.webp", desc: "Pescado, pulpo, camarones, cilantro, apio, queso de cabra y cebolla morada" },
   { id: "cv3r", cat: "ceviches", nm: "Ceviche Puerto Perú · reineta",   precio: 17900, desc: "Pescado, choclo, camote, cebolla morada, rocoto, maíz serrano y cilantro" },
   { id: "cv3",  cat: "ceviches", nm: "Ceviche Puerto Perú · corvinilla", precio: 16900, desc: "Pescado, choclo, camote, cebolla morada, rocoto, maíz serrano y cilantro" },
   { id: "cv1r", cat: "ceviches", nm: "Ceviche Doña Filo · reineta",     precio: 16900, desc: "Pescado, papa cocida, tomate, ají verde, cebolla morada y palta" },

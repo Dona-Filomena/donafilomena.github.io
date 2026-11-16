@@ -110,7 +110,7 @@
     $("#locGrid").innerHTML = Object.values(LOCALES).map(l => {
       const e = estado(l);
       const img = l.foto
-        ? `<img src="${l.foto}" alt="Fachada de ${esc(l.nombre)}" loading="lazy">`
+        ? `<img src="${l.foto}" alt="Local ${esc(l.nombre)}" loading="lazy"${l.fotoPos ? ` style="object-position:${l.fotoPos}"` : ""}>`
         : `<div class="loc-ph"><span>${esc(l.corto)}<small>${esc(l.direccion)}</small></span></div>`;
       const pedir = l === LOCAL
         ? `<a class="btn btn-primary" href="#carta">Hacer mi pedido</a>`
