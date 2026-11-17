@@ -810,3 +810,34 @@ button.fcard-img{display:block;width:100%;padding:0;border:0;cursor:zoom-in;font
 @media (max-width:759px){.hero .seal{width:84px;top:14px}.hero-inner{padding-top:118px}}
 .wa-float{transition:opacity .3s,transform .3s var(--ease)}
 @media (max-width:979px){body:not(.past-hero) .wa-float{opacity:0;pointer-events:none;transform:translateY(16px)}}
+
+/* locales y postres/tragos también en oscuro */
+.locales,.dulce{
+  --card:var(--night-2);--bg:#1B110B;--bg-2:var(--night-2);--bg-3:#2E1C13;--ink:#FFF4E2;--ink-2:#E8D3B6;--ink-3:#B8977A;
+  --line:rgba(255,240,220,.16);--line-2:rgba(255,240,220,.08);
+  color:var(--ink);background:var(--night);box-shadow:0 0 0 100vmax var(--night);clip-path:inset(0 -100vmax);
+}
+.locales .sec-head{max-width:820px;margin-left:auto;margin-right:auto;text-align:center}
+.locales .sec-sub{margin:0 auto}
+.locales .kicker{color:var(--gold-2);justify-content:center}
+.locales .sec-head h2{font-size:clamp(44px,9vw,92px);color:var(--cream)}
+.locales .sec-head h2 em,.dulce .dulce-card.te h2 em{color:var(--red)}
+.locales .loc{border-color:var(--line-2);box-shadow:0 20px 50px -30px rgba(0,0,0,.9)}
+.locales .loc:hover{border-color:rgba(211,32,46,.55)}
+.locales .loc-tipo{color:var(--gold-2)}
+.locales .loc h3{font-family:var(--display);text-transform:uppercase;font-weight:700;letter-spacing:.01em;font-size:clamp(34px,5vw,44px)}
+.locales .btn-ghost{border-color:rgba(255,244,226,.6);color:var(--cream)}
+.locales .btn-ghost:hover{background:var(--cream);color:var(--night)}
+.carta{padding-top:clamp(24px,4vw,48px)}
+.dulce{padding-top:clamp(40px,6vw,72px);padding-bottom:clamp(56px,7vw,96px)}
+.dulce-card{box-shadow:0 24px 60px -34px rgba(0,0,0,.95);border:1px solid var(--line-2)}
+.dulce-card.te{background:var(--night-2)}
+.dulce-card.barra{background:linear-gradient(160deg,#3A1410,#1E0F0A 60%);color:var(--cream)}
+.dulce .dulce-body h2{font-size:clamp(34px,5vw,54px)}
+.dulce .kicker{color:var(--gold-2)}
+.dulce .leaders .price{color:var(--gold-2);font-family:var(--display);font-weight:600;font-size:16px}
+.dulce .leaders .ln{font-family:var(--display);text-transform:uppercase;font-weight:500;letter-spacing:.02em}
+.dulce .leaders .ln small{font-family:var(--sans);text-transform:none;letter-spacing:0}
+.dulce .step{background:var(--red);color:#fff}
+.dulce .link-arrow{color:var(--gold-2)}
+.dulce .encargo{background:rgba(255,240,220,.04)}
