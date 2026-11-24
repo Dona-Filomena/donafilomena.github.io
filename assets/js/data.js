@@ -367,6 +367,7 @@ const MENU = [
   { id: "b1",  cat: "jugos", nm: "Jugo de Mango",              precio: 4200, tags: ["pedido"], img: "assets/img/platos/jugo-mango.webp" },
   { id: "b5",  cat: "jugos", nm: "Limonada Menta Jengibre",    precio: 4200, tags: ["pedido"], img: "assets/img/bebidas/limonada-menta-2.webp" },
   { id: "b17", cat: "jugos", nm: "Jugo de Maracuyá",           precio: 4200, img: "assets/img/bebidas/maracuya-1.webp" },
+  { id: "b19", cat: "jugos", nm: "Chicha Morada", precio: 4000, img: "assets/img/platos/chicha-morada.webp", desc: "Maíz morado, clavo de olor, manzana verde, piña y anís estrellado" },
   { id: "b13", cat: "jugos", nm: "Tres Marías",                precio: 4200, desc: "Manzana, mango y maracuyá" },
   { id: "b14", cat: "jugos", nm: "San Luis",                   precio: 4200, img: "assets/img/bebidas/pepino-3.webp", desc: "Pepino, limón y menta" },
   { id: "b18", cat: "jugos", nm: "Abrazote",                   precio: 4200, img: "assets/img/bebidas/arandano-2.webp", desc: "Arándanos, manzana y leche condensada" },
@@ -402,7 +403,7 @@ const MENU = [
   { id: "c9",  cat: "schop", nm: "Vaso chelado",               precio: 1300, desc: "Zumo de limón y sal en el borde del vaso" },
 
   /* ---------- MOJITOS ---------- */
-  { id: "mj2", cat: "mojitos", nm: "Mojito de Sabores", precio: 8000, tags: ["pedido"], img: "assets/img/platos/mojito-sabores.webp", desc: "Mango, maracuyá, frutos rojos o manzana jengibre" },
+  { id: "mj2", cat: "mojitos", nm: "Mojito de Sabores", precio: 8000, tags: ["pedido"], img: "assets/img/platos/mojito-frutilla.webp", desc: "Mango, maracuyá, frutos rojos o manzana jengibre" },
   { id: "mj3", cat: "mojitos", nm: "Mojito Cubano",     precio: 8000, tags: ["pedido"], img: "assets/img/bebidas/mojito.webp", desc: "Havana Club, limón macerado, hierba buena y azúcar flor" },
   { id: "mj7", cat: "mojitos", nm: "Mojito Honey",      precio: 9000, img: "assets/img/bebidas/mojito-2.webp", desc: "Jack Daniel's Honey, limón macerado, maracuyá, hierba buena y azúcar flor" },
   { id: "mj6", cat: "mojitos", nm: "Mojito Jäger",      precio: 9000, img: "assets/img/bebidas/mojito-2.webp", desc: "Jägermeister, limón macerado, hierba buena y azúcar flor" },
@@ -439,7 +440,7 @@ const MENU = [
   { id: "ct19", cat: "cocteles", nm: "Aperol Mara",       precio: 7500,  desc: "Aperol, espumante brut y maracuyá", img: "assets/img/platos/aperol-mara.webp" },
   { id: "ct14", cat: "cocteles", nm: "Caipiriña",         precio: 7500, img: "assets/img/bebidas/caipirinha.webp" },
   { id: "ct15", cat: "cocteles", nm: "Negroni",           precio: 7500, img: "assets/img/bebidas/negroni.webp", desc: "Ginebra, Campari y vermouth rojo dulce" },
-  { id: "ct20", cat: "cocteles", nm: "Ruso Blanco",       precio: 7500, img: "assets/img/bebidas/white-russian.webp", desc: "Vodka, licor de café y crema fresca" },
+  { id: "ct20", cat: "cocteles", nm: "Ruso Blanco",       precio: 7500, img: "assets/img/platos/ruso-blanco.webp", desc: "Vodka, licor de café y crema fresca" },
   { id: "ct2",  cat: "cocteles", nm: "Romeo",             precio: 7000,  img: "assets/img/platos/romeo.webp", desc: "Blue rasp, curaçao, licor de saúco, limón y el secreto de la casa" },
   { id: "ct11", cat: "cocteles", nm: "Margarita Frozen",  precio: 7000,  img: "assets/img/platos/margarita-frozen.webp" },
   { id: "ct21", cat: "cocteles", nm: "Daiquiri Frozen de Frutilla", precio: 7000, img: "assets/img/bebidas/daiquiri-frutilla.webp" },
@@ -452,7 +453,7 @@ const MENU = [
   { id: "ct23", cat: "cocteles", nm: "Tom Collins",       precio: 6500, img: "assets/img/bebidas/tom-collins-1.webp", desc: "Gin, goma, limón y soda" },
   { id: "ct24", cat: "cocteles", nm: "Tequila Sunrise",   precio: 6500, img: "assets/img/bebidas/tequila-sunrise-3.webp", desc: "Tequila, jugo de naranja y granadina" },
   { id: "ct25", cat: "cocteles", nm: "Clavo Oxidado",     precio: 6500, img: "assets/img/bebidas/rusty-nail-2.webp", desc: "Whisky, Drambuie y clavo de olor" },
-  { id: "ct18", cat: "cocteles", nm: "Daiquiri de Sabores", precio: 6000, img: "assets/img/bebidas/daiquiri-2.webp", desc: "Frutilla, limón, maracuyá o mango, con ron blanco y goma" },
+  { id: "ct18", cat: "cocteles", nm: "Daiquiri de Sabores", precio: 6000, img: "assets/img/platos/daiquiri-maracuya.webp", desc: "Frutilla, limón, maracuyá o mango, con ron blanco y goma" },
   { id: "ct26", cat: "cocteles", nm: "Mimosa",            precio: 6000, img: "assets/img/bebidas/mimosa-3.webp", desc: "Espumante y jugo de naranja" },
   { id: "ct27", cat: "cocteles", nm: "Bellini",           precio: 6000, img: "assets/img/bebidas/bellini-3.webp", desc: "Durazno macerado y espumante" },
   { id: "ct28", cat: "cocteles", nm: "Ruso Negro",        precio: 6000, img: "assets/img/bebidas/black-russian.webp", desc: "Vodka y licor de café" },
@@ -526,5 +527,5 @@ const INSTAGRAM_POSTS = [
   { img: "assets/img/platos/postre-y-jugo.webp", alt: "Postre de la casa con jugo natural", url: IG },
   { img: "assets/img/platos/filomena-pasion.webp", alt: "Cóctel de la casa Filomena Pasión", url: IG },
   { img: "assets/img/platos/sangria.webp", alt: "Sangría de la casa", url: IG },
-  { img: "assets/img/platos/coctel-rosado.webp", alt: "Coctelería de la barra", url: IG }
+  { img: "assets/img/platos/orgasmo.webp", alt: "Cóctel Orgasmo, de la barra", url: IG }
 ];
